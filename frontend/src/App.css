@@ -28,13 +28,10 @@
   color: #61dafb;
 }
 
-#fullscreen {
-  height: 85vh;
-}
 
 #leftSideBar {
   display: flex;
-  background: #2a2726;
+  background: grey;
   width: 20%;
   height: 100%;
   justify-content: center;
