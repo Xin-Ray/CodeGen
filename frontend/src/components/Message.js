@@ -54,15 +54,15 @@ class Message extends React.Component {
                     </div>
                 </div>
                 <div id="chatContainer">
- 
-                    <div id='chatt' style={{ height: '75vh' }}>
+
+                    <div id='chatt' style={{ height: '75vh', marginLeft: '20px', marginRight: '20px' }}>
                         {
                             this.state.chat.map((msg) => {
                                 if (msg.from == 'cb') {
-                                    return <div  id ="msgLeft" style={{
+                                    return <div id="msgLeft" style={{
                                         flexWrap: 'wrap', fontSize: '17px', fontFamily: 'cursive',
                                         marginBottom: '10px', borderRadius: '5px', marginRight: '500px',
-                                        padding: '10px', paddingBottom: '10px', width: '70%',
+                                        padding: '10px', paddingBottom: '10px',
                                         backgroundColor: '#f9f9f9', color: 'black', float: 'left',
                                         display: 'block'
                                     }}>{msg.msag} </div>
@@ -71,7 +71,7 @@ class Message extends React.Component {
                                     return <div style={{
                                         flexWrap: 'wrap', fontSize: '17px', fontFamily: 'cursive', marginRight: '20px',
                                         marginBottom: '10px', borderRadius: '5px', marginLeft: '500px',
-                                        padding: '10px', paddingBottom: '10px', width: '70%', backgroundColor: 'whitesmoke',
+                                        padding: '10px', paddingBottom: '10px', backgroundColor: 'whitesmoke',
                                         float: 'right', display: 'block', color: 'black'
                                     }}>{msg.msag}</div>
                                 }
@@ -84,7 +84,7 @@ class Message extends React.Component {
                             class="form-control"
 
                             style={{
-                                marginLeft: '250px', width: '70%', float: 'left', flex: 1,
+                                marginLeft: '20px', width: '70%', float: 'left', flex: 1,
                                 padding: '10px',
                                 border: '1px solid #ddd',
                                 borderRadius: '3px',
@@ -95,7 +95,7 @@ class Message extends React.Component {
                             paddingLeft: '25px', paddingRight: '25px', padding: '10px',
                             border: '1px solid #ddd',
                             borderRadius: '3px',
-                            marginRight: '10px', backgroundColor: '#5b9bd5', color: 'white', border: 'none'
+                            marginRight: '10px', backgroundColor: '#5b9bd5', color: 'white', border: 'none', width: '100px'
                         }} class="btn btn-primary">Send</button>
                     </div>
                 </div>
