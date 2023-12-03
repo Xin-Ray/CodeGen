@@ -28,9 +28,12 @@
   color: #61dafb;
 }
 
+#fullscreen {
+  display: 'flex';
+  justify-content: 'space-between';
+}
 
 #leftSideBar {
-  display: flex;
   background: grey;
   width: 20%;
   height: 100%;
@@ -85,7 +88,7 @@
 }
 
 #msgText {
-  margin-left: 20px;
+  margin-left: 65px;
   width: 70%;
   float: left;
   flex: 1 1 0%;
@@ -105,7 +108,8 @@
   width: 100px;
   cursor: pointer;
 }
-#chatCont{
+
+#chatCont {
   height: '2vh';
 }
 
