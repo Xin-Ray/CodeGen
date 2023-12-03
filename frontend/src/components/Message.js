@@ -9,48 +9,74 @@ class Message extends React.Component {
         chat: [],
         msg: ''
     }
+    handleKeyPress = (event) => {
+        // Check if the pressed key is "Enter" (keyCode 13)
+        if (event.key === 'Enter') {
+            // Trigger the click event when "Enter" is pressed
+            this.handleSend();
+        }
+    };
+
     handleChange = (e) => {
         console.log(e.target.value);
         this.setState({ msg: e.target.value });
     }
     handleSend = () => {
         //socket connection
-        const socket = io(' http://127.0.0.1:5002');
+        const socket = io('http://127.0.0.1:5002');
         socket.on('connect', () => {
             console.log('Connected to the server');
         });
 
         if (this.state.msg != '') {
             socket.emit('message', { content: this.state.msg });
-            /*axios.post('http://127.0.0.1:5000/user', { 'msg': this.state.msg })
-                .then(res => {
-                    let ch = this.state.chat;
-                    ch.push({ from: 'our', msag: this.state.msg });
-                    ch.push({ from: 'cb', msag: res.data });
-                    this.setState({ chat: ch, msg: '' });
-                    console.log(this.state);
 
-
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            //manual data feeding
-            let ch = this.state.chat;
-            ch.push({ from: 'our', msag: this.state.msg });
-            ch.push({ from: 'cb', msag: "Hi! I am good , how aboutyou ?" });
-            this.setState({ chat: ch, msg: '' });
-            console.log(this.state);
-            */
             socket.on('message', data => {
                 console.log('Received message:', data);
+                if (data.sender === 'assistant') {
+                    // Extract the message content from data.data using regular expressions
+                    const match = data.data.match(/```([\s\S]+?)```/);
+
+                    if (match && match[1]) {
+                        let actionMessage = match[1].trim();
+                        // Add two lines before "TERMINATE" and before "### Explanation:"
+                        actionMessage = actionMessage.replace(/python/g, 'python code:\n');
+                        actionMessage = actionMessage.replace(/TERMINATE/g, '\n\nTERMINATE');
+                        actionMessage = actionMessage.replace(/### Explanation:/g, '\n\n### Explanation:');
+
+                        // Check if the message starts with "print("
+                        if (actionMessage.startsWith('print("')) {
+                            // Remove "print(" from the beginning of the message
+                            actionMessage = actionMessage.slice('print("'.length);
+                        }
+
+                        this.setState(prevState => ({
+                            chat: [...prevState.chat, { from: 'cb', msag: actionMessage }]
+                        }));
+                    }
+                }
+
+
+
+                if (data.sender === 'user_proxy') {
+                    console.log("rpoxy")
+                    return;
+                }
+
             });
-            let ch = this.state.chat;
-            ch.push({ from: 'our', msag: this.state.msg });
-            ch.push({ from: 'cb', msag: "Hi! I am good , how aboutyou ?" });
-            this.setState({ chat: ch, msg: '' });
-            console.log(this.state);
-            this.forceUpdate();
+
+
+            this.setState(prevState => {
+                let ch = [...prevState.chat];
+                ch.push({ from: 'our', msag: prevState.msg });
+                ch.push({ from: 'cb', msag: prevState.data });
+                console.log("check:", ch)
+
+                return { chat: ch, msg: '' };
+            }, () => {
+                // Callback function that will be called after the state is updated
+                console.log(this.state);
+            });
         }
         let interval = window.setInterval(function () {
             var elem = document.getElementById('chatt');
@@ -86,6 +112,7 @@ class Message extends React.Component {
                     <div id="chatCont" >
                         <input type='text' name='msg' id="msgText"
                             onChange={(e) => this.handleChange(e)}
+                            onKeyDown={(e) => this.handleKeyPress(e)}
                             class="form-control"
                             value={this.state.msg} />
                         <button id="submitBtn" onClick={() => this.handleSend()}
