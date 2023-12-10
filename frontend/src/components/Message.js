@@ -9,10 +9,9 @@ class Message extends React.Component {
         msg: '',
         modelType: 'GPT',
         loading: false,
-        //socketUrl: ''
-        socketUrl: 'http://127.0.0.1:5002' // default value
+        url:''
     }
-   
+
     handleKeyPress = (event) => {
         // Check if the pressed key is "Enter" (keyCode 13)
         if (event.key === 'Enter') {
@@ -28,8 +27,9 @@ class Message extends React.Component {
 
     handleSend = () => {
         //socket connection
-        const socket = io('http://127.0.0.1:5002');
-        //let socket = io(this.state.url);
+        //const socket = io('http://127.0.0.1:5002');
+        console.log("th val:", this.state.url)
+        let socket = io(this.state.url);
 
         if (this.state.msg !== '') {
             this.setState({ loading: true }); // Indicate loading state
@@ -120,10 +120,10 @@ class Message extends React.Component {
                                     <input
                                         type="text"
                                         id="urlName"
-                                        value={this.state.socketUrl}
+                                        value={this.state.url}
                                         //onChange={this.handleUrlChange}
                                         onChange={(e) => this.setState({ url: e.target.value })}
-                                        
+
                                     />
                                     <label htmlFor="keyName">API Key</label>
                                     <input
