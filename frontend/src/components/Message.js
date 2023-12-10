@@ -58,12 +58,13 @@ class Message extends React.Component {
                         }
                         responseMsg = actionMessage || "Response from the server";
                     }
+                    this.setState(prevState => ({
+                        chat: [...prevState.chat, { from: 'cb', msg: responseMsg }],
+                        loading: false // Turn off loading state after receiving the response
+                    }));
                 }
 
-                this.setState(prevState => ({
-                    chat: [...prevState.chat, { from: 'cb', msg: responseMsg }],
-                    loading: false // Turn off loading state after receiving the response
-                }));
+               
             });
 
 
