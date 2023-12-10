@@ -29,14 +29,20 @@
 }
 
 #fullscreen {
-  display: 'flex';
+  display: flex;
+  flex-direction: row;
   justify-content: 'space-between';
 }
 
+.information {
+  padding: 10px;
+}
+
 #leftSideBar {
-  background: grey;
+  display: block;
+  background: #C4CBCD;
   width: 20%;
-  height: 100%;
+  margin-left: 1%;
   justify-content: center;
   float: left;
 }
@@ -45,7 +51,6 @@
   display: block;
   background: black;
   width: 80%;
-  margin-left: 5%;
   height: 100%;
   justify-content: center;
   float: right;
@@ -53,7 +58,9 @@
 }
 
 #chatt {
-  height: 75vh;
+  height: 85vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -61,12 +68,11 @@
 #botWindow {
   flex-wrap: wrap;
   font-size: 17px;
-  font-family: cursive;
   margin-bottom: 10px;
   border-radius: 5px;
   margin-right: 500px;
   padding: 10px;
-  background-color: rgb(164, 223, 204);
+  background-color: #E1E1E2;
   color: black;
   float: left;
   display: block;
@@ -75,13 +81,12 @@
 #userWindow {
   flex-wrap: wrap;
   font-size: 17px;
-  font-family: cursive;
   margin-right: 20px;
   margin-bottom: 10px;
   border-radius: 5px;
   margin-left: 500px;
   padding: 10px;
-  background-color: rgb(239, 186, 198);
+  background-color: #C4CBCD;
   float: right;
   display: block;
   color: black;
@@ -113,6 +118,53 @@
   height: '2vh';
 }
 
+.radio-buttons {
+  background-color: #D9D9D9;
+  padding: 5px;
+}
+
+.radio-buttons input[type='radio'] {
+  display: none;
+  /* Hide the default radio button */
+}
+
+.radio-buttons label {
+  background-color: #D9D9D9;
+  padding: 10px 20px;
+  border: 1px solid #D9D9D9;
+  border-radius: 5px;
+  display: inline-block;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.radio-buttons input[type='radio']:checked+label {
+  background-color: #C4CBCD;
+  color: black;
+  border-color: #C4CBCD;
+}
+
+.inputs label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  float: left;
+}
+
+.inputs input[type='text'] {
+  display: block;
+  width: 90%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
+}
+
+.llm-selection {
+  margin: 20px 5px 20px 5px;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -120,5 +172,36 @@
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+#loading {
+  text-align: center;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+/* Or if you want to use a spinner instead of text */
+#loading::after {
+  content: '';
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
   }
 }

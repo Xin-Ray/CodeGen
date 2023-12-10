@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import { io } from 'socket.io-client';
 
 
@@ -7,8 +6,13 @@ import { io } from 'socket.io-client';
 class Message extends React.Component {
     state = {
         chat: [],
-        msg: ''
+        msg: '',
+        modelType: 'GPT',
+        loading: false,
+        //socketUrl: ''
+        socketUrl: 'http://127.0.0.1:5002' // default value
     }
+   
     handleKeyPress = (event) => {
         // Check if the pressed key is "Enter" (keyCode 13)
         if (event.key === 'Enter') {
@@ -18,22 +22,25 @@ class Message extends React.Component {
     };
 
     handleChange = (e) => {
-        console.log(e.target.value);
+        //console.log(e.target.value);
         this.setState({ msg: e.target.value });
     }
+
     handleSend = () => {
         //socket connection
         const socket = io('http://127.0.0.1:5002');
-        socket.on('connect', () => {
-            console.log('Connected to the server');
-        });
+        //let socket = io(this.state.url);
 
-        if (this.state.msg != '') {
+        if (this.state.msg !== '') {
+            this.setState({ loading: true }); // Indicate loading state
+
             socket.emit('message', { content: this.state.msg });
+            let responseMsg = '';
 
             socket.on('message', data => {
                 console.log('Received message:', data);
                 if (data.sender === 'assistant') {
+                    this.setState({ loading: false }); // Set loading to false when you receive the response
                     // Extract the message content from data.data using regular expressions
                     const match = data.data.match(/```([\s\S]+?)```/);
 
@@ -49,66 +56,104 @@ class Message extends React.Component {
                             // Remove "print(" from the beginning of the message
                             actionMessage = actionMessage.slice('print("'.length);
                         }
-
-                        this.setState(prevState => ({
-                            chat: [...prevState.chat, { from: 'cb', msag: actionMessage }]
-                        }));
+                        responseMsg = actionMessage || "Response from the server";
                     }
                 }
 
-
-
-                if (data.sender === 'user_proxy') {
-                    console.log("rpoxy")
-                    return;
-                }
-
+                this.setState(prevState => ({
+                    chat: [...prevState.chat, { from: 'cb', msg: responseMsg }],
+                    loading: false // Turn off loading state after receiving the response
+                }));
             });
 
 
+            // Adding message bubble for the user's message immediately
             this.setState(prevState => {
-                let ch = [...prevState.chat];
-                ch.push({ from: 'our', msag: prevState.msg });
-                ch.push({ from: 'cb', msag: prevState.data });
-                console.log("check:", ch)
-
-                return { chat: ch, msg: '' };
-            }, () => {
-                // Callback function that will be called after the state is updated
-                console.log(this.state);
+                return {
+                    chat: [...prevState.chat, { from: 'our', msg: prevState.msg }],
+                    msg: ''
+                };
             });
         }
-        let interval = window.setInterval(function () {
-            var elem = document.getElementById('chatt');
-            elem.scrollTop = elem.scrollHeight;
-            window.clearInterval(interval);
-        }, 5000)
     }
+
     render() {
         return (
             <div id="fullscreen"  >
                 <div id="leftSideBar">
-                    <div class="information">
-                        <div class="agent-info">CodeGen</div>
-                        <div class="code-agent-automatically-review-llm-code">
-                            Code Agent, automatically review llm code
+                    <div className="information">
+                        <div className="agent-info">CodeGen</div>
+                        <div className="decs">Code Agent, automatically run and execute code</div>
+                        <div className="llm-selection">
+                            <form>
+                                <div className="radio-buttons">
+                                    <input
+                                        type="radio"
+                                        id="gpt"
+                                        name="modelType"
+                                        value="GPT"
+                                        checked={this.state.modelType === 'GPT'}
+                                        onChange={(e) => this.setState({ modelType: e.target.value })}
+                                    />
+                                    <label htmlFor="gpt">GPT</label>
+
+                                    <input
+                                        type="radio"
+                                        id="llm"
+                                        name="modelType"
+                                        value="LLM"
+                                        checked={this.state.modelType === 'LLM'}
+                                        onChange={(e) => this.setState({ modelType: e.target.value })}
+                                    />
+                                    <label htmlFor="llm">LLM</label>
+                                </div>
+                                <div className="inputs">
+                                    <label htmlFor="modelName">Model Name</label>
+                                    <input
+                                        type="text"
+                                        id="modelName"
+                                        placeholder="Model Name"
+                                        value={this.state.modelName}
+                                        onChange={(e) => this.setState({ modelName: e.target.value })}
+                                    />
+                                    <label htmlFor="urlName">URL</label>
+                                    <input
+                                        type="text"
+                                        id="urlName"
+                                        value={this.state.socketUrl}
+                                        //onChange={this.handleUrlChange}
+                                        onChange={(e) => this.setState({ url: e.target.value })}
+                                        
+                                    />
+                                    <label htmlFor="keyName">API Key</label>
+                                    <input
+                                        type="text"
+                                        id="keyName"
+                                        placeholder="API_Key"
+                                        value={this.state.apiKey}
+                                        onChange={(e) => this.setState({ apiKey: e.target.value })}
+                                    />
+                                </div>
+                            </form>
                         </div>
+
                     </div>
                 </div>
                 <div id="chatContainer">
 
-                    <div id='chatt' >
-                        {
-                            this.state.chat.map((msg) => {
-                                if (msg.from == 'cb') {
-                                    return <div id="botWindow" >{msg.msag} </div>
-                                }
-                                else {
-                                    return <div id="userWindow" >{msg.msag}</div>
-                                }
-                            })
-                        }
+                    <div id='chatt'>
+                        {this.state.loading && <div id="loading">Loading...</div>}
+                        {this.state.chat.map((msg, index) => {
+                            let bubble = null;
+                            if (msg.from === 'cb') {
+                                bubble = <div key={index} id="botWindow">{msg.msg}</div>;
+                            } else if (msg.from === 'our' && msg.msg.trim() !== '') {
+                                bubble = <div key={index} id="userWindow">{msg.msg}</div>;
+                            }
+                            return bubble;
+                        })}
                     </div>
+
                     <div id="chatCont" >
                         <input type='text' name='msg' id="msgText"
                             onChange={(e) => this.handleChange(e)}
