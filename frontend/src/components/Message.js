@@ -9,7 +9,7 @@ class Message extends React.Component {
         msg: '',
         modelType: 'GPT',
         loading: false,
-        url:''
+        url: 'http://127.0.0.1:5002'
     }
 
     handleKeyPress = (event) => {
@@ -26,10 +26,12 @@ class Message extends React.Component {
     }
 
     handleSend = () => {
+        this.setState({ loading: true });
         //socket connection
         //const socket = io('http://127.0.0.1:5002');
-        console.log("th val:", this.state.url)
+
         let socket = io(this.state.url);
+        console.log("sending", this.state.url, this.state.loading)
 
         if (this.state.msg !== '') {
             this.setState({ loading: true }); // Indicate loading state
@@ -38,8 +40,10 @@ class Message extends React.Component {
             let responseMsg = '';
 
             socket.on('message', data => {
-                console.log('Received message:', data);
+
                 if (data.sender === 'assistant') {
+                    console.log('Received message:', data);
+                    console.log("got back ", this.state.url, this.state.loading)
                     this.setState({ loading: false }); // Set loading to false when you receive the response
                     // Extract the message content from data.data using regular expressions
                     const match = data.data.match(/```([\s\S]+?)```/);
@@ -64,7 +68,7 @@ class Message extends React.Component {
                     }));
                 }
 
-               
+
             });
 
 
