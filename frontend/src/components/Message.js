@@ -7,6 +7,7 @@ class Message extends React.Component {
     state = {
         chat: [],
         msg: '',
+        sender:'',
         modelType: 'GPT',
         loading: false,
         url: 'http://127.0.0.1:5002'
@@ -40,35 +41,20 @@ class Message extends React.Component {
             let responseMsg = '';
 
             socket.on('message', data => {
-
-                if (data.sender === 'assistant') {
-                    console.log('Received message:', data);
-                    console.log("got back ", this.state.url, this.state.loading)
-                    this.setState({ loading: false }); // Set loading to false when you receive the response
-                    // Extract the message content from data.data using regular expressions
-                    const match = data.data.match(/```([\s\S]+?)```/);
-
-                    if (match && match[1]) {
-                        let actionMessage = match[1].trim();
-                        // Add two lines before "TERMINATE" and before "### Explanation:"
-                        actionMessage = actionMessage.replace(/python/g, 'python code:\n');
-                        actionMessage = actionMessage.replace(/TERMINATE/g, '\n\nTERMINATE');
-                        actionMessage = actionMessage.replace(/### Explanation:/g, '\n\n### Explanation:');
-
-                        // Check if the message starts with "print("
-                        if (actionMessage.startsWith('print("')) {
-                            // Remove "print(" from the beginning of the message
-                            actionMessage = actionMessage.slice('print("'.length);
-                        }
-                        responseMsg = actionMessage || "Response from the server";
-                    }
-                    this.setState(prevState => ({
-                        chat: [...prevState.chat, { from: 'cb', msg: responseMsg }],
-                        loading: false // Turn off loading state after receiving the response
-                    }));
-                }
+                console.log('Received message:', data);
+                console.log('The data:', data.data);
+                console.log('The sender:', data.sender);
 
 
+                this.setState({ loading: false });
+                let senderName=data.sender;
+                let actionMessage = data.data;
+                responseMsg = actionMessage || "Response from the server";
+
+                this.setState(prevState => ({
+                    chat: [...prevState.chat, { from: senderName, msg: responseMsg }],
+                    loading: false // Turn off loading state after receiving the response
+                }));
             });
 
 
@@ -150,13 +136,30 @@ class Message extends React.Component {
                         {this.state.loading && <div id="loading">Loading...</div>}
                         {this.state.chat.map((msg, index) => {
                             let bubble = null;
-                            if (msg.from === 'cb') {
-                                bubble = <div key={index} id="botWindow">{msg.msg}</div>;
+                            if (msg.from !== 'our') {
+                                bubble = (
+                                    <div key={index} className="messageContainer">
+                                        <div id="botWindow" className="codeFormat">
+                                            <div className="senderNameLeft">{msg.from}</div> {/* dynamic group agent */}
+                                            <div>{msg.msg}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
                             } else if (msg.from === 'our' && msg.msg.trim() !== '') {
-                                bubble = <div key={index} id="userWindow">{msg.msg}</div>;
+                                bubble = (
+                                    <div key={index} className="messageContainer">
+                                        <div id="userWindow" className="codeFormat" >
+                                            <div className="senderName">You</div> {/* Static name for the user */}
+                                            <div >{msg.msg}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
                             }
                             return bubble;
                         })}
+
                     </div>
 
                     <div id="chatCont" >
