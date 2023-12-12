@@ -195,6 +195,43 @@
   -webkit-animation: spin 1s ease-in-out infinite;
 }
 
+.messageContainer {
+  margin-bottom: 10px;
+}
+
+.senderName {
+  font-size: 0.85em;
+  color: #6c757d;
+  /* Grey color for the sender's name */
+  margin-bottom: 2px;
+  float: right;
+}
+.senderNameLeft{
+  font-size: 0.85em;
+  color: #6c757d;
+  /* Grey color for the sender's name */
+  margin-bottom: 2px;
+  float: left;
+}
+
+.codeFormat {
+  text-align: left;
+  /* Aligns text to the left */
+  white-space: pre-wrap;
+  /* Preserves whitespace and formatting */
+  /* CSS 2.0 */
+  font-family: monospace;
+  /* Optional: Ensures that spacing is consistent */
+  white-space: -moz-pre-wrap;
+  /* Mozilla */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+}
+
 @keyframes spin {
   to {
     -webkit-transform: rotate(360deg);
