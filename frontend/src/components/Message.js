@@ -7,8 +7,10 @@ class Message extends React.Component {
     state = {
         chat: [],
         msg: '',
-        sender:'',
+        sender: '',
         modelType: 'GPT',
+        apiKey: '',
+        baseUrl: '',
         loading: false,
         url: 'http://127.0.0.1:5002'
     }
@@ -33,11 +35,20 @@ class Message extends React.Component {
 
         let socket = io(this.state.url);
         console.log("sending", this.state.url, this.state.loading)
+        //sending API key
+        socket.emit('update_api_key', { 'api_key': this.state.apiKey });
+
+        //sending base URL for LLM
+        socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
 
         if (this.state.msg !== '') {
             this.setState({ loading: true }); // Indicate loading state
 
             socket.emit('message', { content: this.state.msg });
+
+
+
+
             let responseMsg = '';
 
             socket.on('message', data => {
@@ -47,7 +58,7 @@ class Message extends React.Component {
 
 
                 this.setState({ loading: false });
-                let senderName=data.sender;
+                let senderName = data.sender;
                 let actionMessage = data.data;
                 responseMsg = actionMessage || "Response from the server";
 
@@ -98,33 +109,66 @@ class Message extends React.Component {
                                     />
                                     <label htmlFor="llm">LLM</label>
                                 </div>
-                                <div className="inputs">
-                                    <label htmlFor="modelName">Model Name</label>
-                                    <input
-                                        type="text"
-                                        id="modelName"
-                                        placeholder="Model Name"
-                                        value={this.state.modelName}
-                                        onChange={(e) => this.setState({ modelName: e.target.value })}
-                                    />
-                                    <label htmlFor="urlName">URL</label>
-                                    <input
-                                        type="text"
-                                        id="urlName"
-                                        value={this.state.url}
-                                        //onChange={this.handleUrlChange}
-                                        onChange={(e) => this.setState({ url: e.target.value })}
+                                {this.state.modelType === 'GPT' && (
+                                    <div className="inputs">
+                                        <label htmlFor="modelName">Model Name</label>
+                                        <input
+                                            type="text"
+                                            id="modelName"
+                                            placeholder="Model Name"
+                                            value={this.state.modelName}
+                                            onChange={(e) => this.setState({ modelName: e.target.value })}
+                                        />
+                                        <label htmlFor="urlName">URL</label>
+                                        <input
+                                            type="text"
+                                            id="urlName"
+                                            value={this.state.url}
+                                            //onChange={this.handleUrlChange}
+                                            onChange={(e) => this.setState({ url: e.target.value })}
 
-                                    />
-                                    <label htmlFor="keyName">API Key</label>
-                                    <input
-                                        type="text"
-                                        id="keyName"
-                                        placeholder="API_Key"
-                                        value={this.state.apiKey}
-                                        onChange={(e) => this.setState({ apiKey: e.target.value })}
-                                    />
-                                </div>
+                                        />
+                                        <label htmlFor="keyName">API Key</label>
+                                        <input
+                                            type="text"
+                                            id="keyName"
+                                            placeholder="API_Key"
+                                            value={this.state.apiKey}
+                                            onChange={(e) => this.setState({ apiKey: e.target.value })}
+                                        />
+
+                                    </div>
+                                )}
+                                {this.state.modelType === 'LLM' && (
+                                    <div className="inputs">
+                                        <label htmlFor="modelName">Model Name</label>
+                                        <input
+                                            type="text"
+                                            id="modelName"
+                                            placeholder="Model Name"
+                                            value={this.state.modelName}
+                                            onChange={(e) => this.setState({ modelName: e.target.value })}
+                                        />
+                                        <label htmlFor="urlName">URL</label>
+                                        <input
+                                            type="text"
+                                            id="urlName"
+                                            value={this.state.url}
+                                            //onChange={this.handleUrlChange}
+                                            onChange={(e) => this.setState({ url: e.target.value })}
+
+                                        />
+
+                                        <label htmlFor="keyName">Base URL</label>
+                                        <input
+                                            type="text"
+                                            id="baseUrl"
+                                            placeholder="LLM Base URL"
+                                            value={this.state.baseUrl}
+                                            onChange={(e) => this.setState({ baseUrl: e.target.value })}
+                                        />
+                                    </div>
+                                )}
                             </form>
                         </div>
 
@@ -133,7 +177,7 @@ class Message extends React.Component {
                 <div id="chatContainer">
 
                     <div id='chatt'>
-                        {this.state.loading && <div id="loading">Loading...</div>}
+
                         {this.state.chat.map((msg, index) => {
                             let bubble = null;
                             if (msg.from !== 'our') {
