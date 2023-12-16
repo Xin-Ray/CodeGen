@@ -13,7 +13,7 @@
   }
 }
 
-.App-header {
+/* .App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -23,6 +23,13 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+@media (max-width: 1600px) {
+  .App-header {
+    width: calc(100% - 512px);
+    margin-left: 512px; 
+  }
+} */
 
 .App-link {
   color: #61dafb;
@@ -37,32 +44,94 @@
 .information {
   padding: 10px;
 }
+.agent-info{
+  color:#AEC0FF;
+  font-weight: 600; /* Semi-bold */
+  font-size: 36px; /* Size of the text */
+  line-height: normal; /* Default line height */
+  letter-spacing: normal; /* Default letter spacing */
+  text-align: left;
+}
+.decs{
+  color:#CCD1FF;
+  font-weight: 300; /* Light font weight */
+  font-size: 24px; /* Font size */
+  line-height: normal; /* Default line height */
+  letter-spacing: normal; /* Default letter spacing */
+  text-align: left; 
+}
 
 #leftSideBar {
   display: block;
-  background: #C4CBCD;
-  width: 20%;
-  margin-left: 1%;
+  background: #2A2726;
+  color: white;
+  width: 400px;
+  margin-left: 0px;
   justify-content: center;
-  float: left;
+  position: fixed; /* 固定位置 */
+  top: 0; /* 顶部对齐 */
+  bottom: 0; /* 底部对齐 */
+}
+
+@media (max-width: 1000px) {
+  #leftSideBar {
+    display: none; /* 隐藏 Sidebar */
+    width: 0; /* 移除宽度，防止占用空间 */
+  }
+  /* 显示一个图标来控制 Sidebar 显示 */
+  .sidebar-icon {
+    display: block;
+    position: fixed;
+    top: 10px; /* 调整为合适的位置 */
+    left: 10px; /* 调整为合适的位置 */
+    z-index: 1000;
+    /* 添加图标样式 */
+  }
 }
 
 #chatContainer {
-  display: block;
   background: black;
-  width: 80%;
-  height: 100%;
-  justify-content: center;
-  float: right;
-
+  width: 1636px; /* 宽度为 1636px */
+  max-width: calc(100% - 16px); /* 确保最大宽度不超过屏幕宽度减去两边的间距 */
+  margin-right: auto; /* 右侧自动填充空白 */
+  margin-left: calc(400px ); /* 左侧自动填充空白 */
+  margin-bottom: 68px; /* 底部距离固定为 68px */
+  height: calc(100vh - 68px); /* 高度为视窗高度减去底部距离 */
 }
-
+@media (max-width: 1000px) {
+  #chatContainer {
+    width: calc(100% - 32px); /* 屏幕宽度减去两边的间距 */
+    margin-left: 16px; /* 左侧间距 */
+    margin-right: 16px; /* 右侧间距 */
+    margin-bottom: 68px; /* 底部距离固定为 68px */
+    height: calc(100vh - 68px); /* 高度为视窗高度减去底部距离 */
+  }
+}
 #chatt {
   height: 85vh;
   overflow-y: scroll;
   overflow-x: hidden;
   margin-left: 20px;
   margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+::-webkit-scrollbar {
+  width: 12px; /* 滚动条的宽度 */
+}
+
+::-webkit-scrollbar-track {
+  background: black; /* 滚动条轨道的背景色 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* 滚动条本身的颜色 */
+  border-radius: 6px; /* 滚动条的圆角 */
+  border: 3px solid black; /* 滚动条边框 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 鼠标悬停时滚动条的颜色 */
 }
 
 #botWindow {
@@ -73,7 +142,7 @@
   margin-right: 500px;
   padding: 10px;
   background-color: #E1E1E2;
-  color: black;
+  color: #284856;
   float: left;
   display: block;
 }
@@ -94,7 +163,7 @@
 
 #msgText {
   margin-left: 65px;
-  width: 70%;
+  width: calc(70% - 15px);
   float: left;
   flex: 1 1 0%;
   padding: 10px;
@@ -104,14 +173,15 @@
 }
 
 #submitBtn {
-  margin-left: -10%;
+  /* margin-left: -10%; */
+  float: left;
   padding: 10px;
   border: none;
   border-radius: 3px;
-  margin-right: 10px;
+  width: 100px;
+  /* margin-right: 10px; */
   background-color: rgb(91, 155, 213);
   color: white;
-  width: 100px;
   cursor: pointer;
 }
 
@@ -120,8 +190,11 @@
 }
 
 .radio-buttons {
-  background-color: #D9D9D9;
+  background-color: #45717F;
   padding: 5px;
+  border: 1px solid #45717F;
+  border-radius: 10px;
+ 
 }
 
 .radio-buttons input[type='radio'] {
@@ -130,35 +203,38 @@
 }
 
 .radio-buttons label {
-  background-color: #D9D9D9;
-  padding: 10px 20px;
-  border: 1px solid #D9D9D9;
+  background-color: #45717F;
+  padding: 10px 75px;
   border-radius: 5px;
   display: inline-block;
-  margin-right: 10px;
   cursor: pointer;
+  color: #9CC4CF;
 }
 
 .radio-buttons input[type='radio']:checked+label {
-  background-color: #C4CBCD;
-  color: black;
+  background-color: #2A2726;
+  color: #9CC4CF;
   border-color: #C4CBCD;
 }
 
 .inputs label {
+  background-color: #2A2726;
   display: block;
   margin-top: 20px;
   margin-bottom: 5px;
   float: left;
+  color:#59DAFF;
 }
 
 .inputs input[type='text'] {
+  background-color: #2A2726;
   display: block;
   width: 90%;
   padding: 10px;
   margin-top: 10px;
-  border: 1px solid #d1d1d1;
+  border: 1px solid #454A5B;
   border-radius: 5px;
+  color:#59DAFF;
 }
 
 .llm-selection {
@@ -195,20 +271,21 @@
   -webkit-animation: spin 1s ease-in-out infinite;
 }
 
+
 .messageContainer {
   margin-bottom: 10px;
 }
 
 .senderName {
   font-size: 0.85em;
-  color: #6c757d;
+  color: #7E9CA9;
   /* Grey color for the sender's name */
   margin-bottom: 2px;
   float: right;
 }
 .senderNameLeft{
   font-size: 0.85em;
-  color: #6c757d;
+  color: #7E9CA9;
   /* Grey color for the sender's name */
   margin-bottom: 2px;
   float: left;
@@ -220,8 +297,7 @@
   white-space: pre-wrap;
   /* Preserves whitespace and formatting */
   /* CSS 2.0 */
-  font-family: monospace;
-  /* Optional: Ensures that spacing is consistent */
+  
   white-space: -moz-pre-wrap;
   /* Mozilla */
   white-space: -pre-wrap;
@@ -231,7 +307,6 @@
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
 }
-
 @keyframes spin {
   to {
     -webkit-transform: rotate(360deg);
