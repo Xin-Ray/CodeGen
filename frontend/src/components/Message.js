@@ -119,7 +119,7 @@ class Message extends React.Component {
                                             value={this.state.modelName}
                                             onChange={(e) => this.setState({ modelName: e.target.value })}
                                         />
-                                        <label htmlFor="urlName">URL</label>
+                                        <label htmlFor="urlName">Websocket URL</label>
                                         <input
                                             type="text"
                                             id="urlName"
