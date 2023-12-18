@@ -1,5 +1,6 @@
 .App {
   width: 100%;
+  overflow-x: hidden;
 }
 
 .App-logo {
@@ -223,33 +224,9 @@
   color: black;
 }
 
-#msgText {
-  margin-left: 65px;
-  width: calc(70% - 15px);
-  float: left;
-  flex: 1 1 0%;
-  padding: 10px;
-  border: 1px solid rgb(221, 221, 221);
-  border-radius: 3px;
-  margin-right: 10px;
-}
 
-#submitBtn {
-  /* margin-left: -10%; */
-  float: left;
-  padding: 10px;
-  border: none;
-  border-radius: 3px;
-  width: 100px;
-  /* margin-right: 10px; */
-  background-color: rgb(91, 155, 213);
-  color: white;
-  cursor: pointer;
-}
 
-#chatCont {
-  height: '2vh';
-}
+
 
 .radio-buttons {
   background-color: #45717F;
@@ -519,4 +496,73 @@ button.downloadBtn {
   border: none;
   padding: 0;
   margin: 0;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba(217, 217, 217, 0.9);
+  /* Light grey with transparency */
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  /* Transition for smooth effect */
+  margin: 10px 100px;
+  /*height:10vh;*/
+}
+
+.input-group:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  /* Larger shadow for 'hover' effect */
+}
+
+#msgText {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin: 0 10px;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.5);
+  /* Slightly transparent background */
+}
+
+#submitBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(91, 155, 213);
+  color: white;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Consistent with the input group */
+}
+
+#submitBtn:hover {
+  background-color: rgb(71, 135, 193);
+  /* Slightly darker on hover */
+}
+
+.add-file-btn {
+  background-color: rgba(239, 239, 244, 0.9);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #B6CCD3;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  /* Smooth transition for background color */
+}
+
+.add-file-btn:hover {
+  background-color: rgba(219, 219, 224, 0.9);
+  /* Darker shade for hover */
+}
+
+
+.add-file-btn i {
+  font-size: 20px;
 }
