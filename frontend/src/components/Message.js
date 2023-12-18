@@ -7,6 +7,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
+function base64ToBlob(base64Data, contentType) {
+    const byteCharacters = atob(base64Data);
+
+    // Create an array buffer and a view (as a byte array)
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    
+    const byteArray = new Uint8Array(byteNumbers);
+
+    // Create a blob from the byte array
+    return new Blob([byteArray], { type: contentType });
+}
+function downloadBlob(blob, filename) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
 
 class Message extends React.Component {
     state = {
@@ -17,7 +42,7 @@ class Message extends React.Component {
         apiKey: '',
         baseUrl: '',
         loading: false,
-        url: 'http://127.0.0.1:5002',
+        url: 'http://127.0.0.1:5003',
         code: '',
         creator: 'Codegen Team',
         files: [
@@ -27,7 +52,125 @@ class Message extends React.Component {
             { name: 'Dummy4.py', type: 'python' },
             // ... other files
         ],
+        receivedFiles: [],
     }
+    componentDidMount() {
+        this.socket = io(this.state.url);
+        this.socket.on('connect', () => {
+            console.log('Connected to the server');
+        });
+
+        
+        this.socket.on('message', data => {
+            console.log('Received message:', data);
+            console.log('The data:', data.data);
+            console.log('The sender:', data.sender);
+            
+            if (data.sender !== 'Admin') {
+                this.setState({ loading: false });
+                let senderName = data.sender;
+                let actionMessage = data.data;
+                let responseMsg = actionMessage || "Response from the server";
+                const addMessageToChat = (senderName, msg, code = null) => {
+                    this.setState(prevState => ({
+                        chat: [...prevState.chat, { from: senderName, msg, code }],
+                        loading: false // Turn off loading state after receiving the response
+                    }));
+                };
+    
+    
+                // Add the extractCode function in the same scope as your socket event listener
+                const extractCode = (response) => {
+                    const pythonPattern = /'''([\s\S]*?)'''/; // For Python
+                    const shellPattern = /```([\s\S]*?)```/; // For Shell
+    
+                    let match = response.match(pythonPattern);
+                    if (match) return match[1];
+    
+                    match = response.match(shellPattern);
+                    if (match) return match[1];
+    
+                    return 'No code found.';
+                };
+                // Check if the message is a code response
+                const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
+                if (codeResponsePattern.test(responseMsg)) {
+                    // Extract the code using the patterns for Python or Shell
+                    const extractedCode = extractCode(responseMsg);
+
+                    // Add the new message with code
+                    addMessageToChat(senderName, null, extractedCode);
+                } else {
+                    // Check for repetitive messages
+                    const lastMessage = this.state.chat[this.state.chat.length - 1];
+                    if (!lastMessage || lastMessage.from !== senderName || lastMessage.msg !== responseMsg) {
+                        // If the message is new, add it to the chat history
+                        addMessageToChat(senderName, responseMsg);
+                    }
+                }
+            }
+        });
+        this.socket.on('file_received', (fileInfo) => {
+            // Assuming the data is a Base64 string and you have the filename
+            console.log('Received file:', fileInfo.fileName);
+            this.setState(prevState => ({
+                receivedFiles: [...prevState.receivedFiles, fileInfo],
+            })); // Use the actual filename
+        });
+        
+    }
+    // file upload
+    fileInput = React.createRef();
+
+    
+    // Trigger file input click
+    handleFileSelectAndUpload = () => {
+        this.fileInput.current.click();
+    };
+
+    // Handle file selection
+    handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            this.setState({ selectedFile: file }, () => {
+                this.uploadFile();
+            });
+        }
+    };
+
+    // Upload file using WebSocket
+    uploadFile = () => {
+        const { selectedFile } = this.state;
+
+        if (selectedFile) {
+            this.socket.emit('update_api_key', { 'api_key': this.state.apiKey });
+
+        //sending base URL for LLM
+            this.socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                // Send file data through WebSocket
+                const base64String = btoa(
+                    new Uint8Array(event.target.result)
+                        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+                );
+                this.socket.emit('file-upload', {
+                    data:base64String,
+                    name:selectedFile.name,
+                });
+            };
+            reader.readAsArrayBuffer(selectedFile);
+        }
+    };
+
+
+
+
+
+
+
+
+
 
     handleKeyPress = (event) => {
         // Check if the pressed key is "Enter" (keyCode 13)
@@ -49,76 +192,21 @@ class Message extends React.Component {
         //socket connection
         //const socket = io('http://127.0.0.1:5002');
 
-        let socket = io(this.state.url);
+        //let socket = io(this.state.url);
         console.log("sending", this.state.url, this.state.loading)
         //sending API key
-        socket.emit('update_api_key', { 'api_key': this.state.apiKey });
+        this.socket.emit('update_api_key', { 'api_key': this.state.apiKey });
 
         //sending base URL for LLM
-        socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
+        this.socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
 
         if (this.state.msg !== '') {
             this.setState({ loading: true }); // Indicate loading state
 
-            socket.emit('message', { content: this.state.msg });
+            this.socket.emit('message', { content: this.state.msg });
 
-            let responseMsg = '';
-
-            socket.on('message', data => {
-                console.log('Received message:', data);
-                console.log('The data:', data.data);
-                console.log('The sender:', data.sender);
-
-                if (data.sender !== 'Admin') {
-                    this.setState({ loading: false });
-                    let senderName = data.sender;
-                    let actionMessage = data.data;
-                    let responseMsg = actionMessage || "Response from the server";
-
-                    // Check if the message is a code response
-                    const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
-                    if (codeResponsePattern.test(responseMsg)) {
-                        // Extract the code using the patterns for Python or Shell
-                        const extractedCode = extractCode(responseMsg);
-
-                        // Add the new message with code
-                        addMessageToChat(senderName, null, extractedCode);
-                    } else {
-                        // Check for repetitive messages
-                        const lastMessage = this.state.chat[this.state.chat.length - 1];
-                        if (!lastMessage || lastMessage.from !== senderName || lastMessage.msg !== responseMsg) {
-                            // If the message is new, add it to the chat history
-                            addMessageToChat(senderName, responseMsg);
-                        }
-                    }
-                }
-            });
-
+            
             // Utility function to add a message to the chat
-            const addMessageToChat = (senderName, msg, code = null) => {
-                this.setState(prevState => ({
-                    chat: [...prevState.chat, { from: senderName, msg, code }],
-                    loading: false // Turn off loading state after receiving the response
-                }));
-            };
-
-
-            // Add the extractCode function in the same scope as your socket event listener
-            const extractCode = (response) => {
-                const pythonPattern = /'''([\s\S]*?)'''/; // For Python
-                const shellPattern = /```([\s\S]*?)```/; // For Shell
-
-                let match = response.match(pythonPattern);
-                if (match) return match[1];
-
-                match = response.match(shellPattern);
-                if (match) return match[1];
-
-                return 'No code found.';
-            };
-
-
-
             // Adding message bubble for the user's message immediately
             this.setState(prevState => {
                 return {
@@ -129,25 +217,31 @@ class Message extends React.Component {
         }
 
     }
-    handleDownload = () => {
-        // This example assumes you have the file you want to download available at a certain URL
-        const fileUrl = 'path_to_your_file/websocket.py'; // URL to the file
-        const fileName = 'websocket.py'; // Name of the file to download
+    // handleDownload = () => {
+    //     // This example assumes you have the file you want to download available at a certain URL
+    //     const fileUrl = 'path_to_your_file/websocket.py'; // URL to the file
+    //     const fileName = 'websocket.py'; // Name of the file to download
 
-        // Create a new anchor element dynamically
-        const anchorElement = document.createElement('a');
-        anchorElement.href = fileUrl;
-        anchorElement.download = fileName; // The download attribute specifies that the target will be downloaded
+    //     // Create a new anchor element dynamically
+    //     const anchorElement = document.createElement('a');
+    //     anchorElement.href = fileUrl;
+    //     anchorElement.download = fileName; // The download attribute specifies that the target will be downloaded
 
-        // Append anchor to the body
-        document.body.appendChild(anchorElement);
-        // Trigger the download by simulating a click on the anchor
-        anchorElement.click();
-        // Clean up: remove anchor from body
-        document.body.removeChild(anchorElement);
-    };
+    //     // Append anchor to the body
+    //     document.body.appendChild(anchorElement);
+    //     // Trigger the download by simulating a click on the anchor
+    //     anchorElement.click();
+    //     // Clean up: remove anchor from body
+    //     document.body.removeChild(anchorElement);
+    // };
 
     render() {
+        const { receivedFiles } = this.state;
+
+        const handleDownload = (fileInfo) => {
+            const blob = base64ToBlob(fileInfo.fileData, fileInfo.mimeType);
+            downloadBlob(blob, fileInfo.fileName);
+        };
         return (
             <div id="fullscreen"  >
                 <div id="leftSideBar">
@@ -241,21 +335,26 @@ class Message extends React.Component {
                     <div className="code-file-section">
                         <div className="section-title">Code File</div>
                         <div className="fileBox">
-                            <div><ul className="file-list">
+                            {receivedFiles.map((file, index) => (
+                                <button key={index} onClick={() => handleDownload(file)} className="download-btn">
+                                    Download {file.fileName}
+                                </button>
+                            ))}
+                            {/* <div><ul className="file-list">
                                 {this.state.files.map((file, index) => (
                                     <li key={index} className="file-item">
-                                        <i className="file-icon"></i> {/* Replace with actual icon */}
+                                        <i className="file-icon"></i> {/Replace with actual icon}
                                         {file.name}
                                     </li>
                                 ))}
                             </ul>
-                            </div>
+                            </div> */}
 
                         </div>
-                        <div className="download-all" onClick={() => this.handleDownload()}>
+                        {/* <div className="download-all" onClick={() => this.handleDownload()}>
                             <span className="download-text">Download All</span>
                             <img src={downloadImage} alt="Download" className="download-icon" />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="created-by-section">
                         <img src={githubImage} alt="GitHub" className="creator-image" />
@@ -298,9 +397,17 @@ class Message extends React.Component {
                     </div>
 
                     <div className="input-group">
-                        <button className="add-file-btn">
+                        <div>
+                            <input 
+                                type="file" 
+                                onChange={this.handleFileChange} 
+                                style={{ display: 'none' }} 
+                                ref={this.fileInput}
+                            />
+                            <button onClick={this.handleFileSelectAndUpload} class="btn btn-secondary  add-file-btn">
                             <FontAwesomeIcon icon={faPlus} />
-                        </button>
+                            </button>
+                        </div>
                         <input type='text'
                             name='msg'
                             id="msgText"
@@ -313,9 +420,9 @@ class Message extends React.Component {
                             onClick={() => this.handleSend()}
                             type="submit"
                             class="btn btn-primary"> <FontAwesomeIcon icon={faPaperPlane} /></button>
+                        
                     </div>
-
-
+                    
                 </div>
             </div >
         )
