@@ -6,16 +6,20 @@
   height: 40vmin;
   pointer-events: none;
 }
+
 .Message {
   width: 100%;
-  margin-top: 50px; /* Adjust this value to the height of your header */
+  margin-top: 50px;
+  /* Adjust this value to the height of your header */
 }
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
-.header-style{
+
+.header-style {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -28,7 +32,7 @@
   backdrop-filter: blur(10px);
   padding: 10px 20px;
   z-index: 1000;
-  border-bottom:0.5px solid #AEC0FF;
+  border-bottom: 0.5px solid #AEC0FF;
 }
 
 /* .App-header {
@@ -61,17 +65,23 @@
 
 .information {
   padding: 10px;
-  margin-top:70px;
+  margin-top: 70px;
 }
-.agent-info{
-  color:#AEC0FF;
-  font-weight: 600; /* Semi-bold */
-  font-size: 36px; /* Size of the text */
-  line-height: normal; /* Default line height */
-  letter-spacing: normal; /* Default letter spacing */
+
+.agent-info {
+  color: #AEC0FF;
+  font-weight: 600;
+  /* Semi-bold */
+  font-size: 36px;
+  /* Size of the text */
+  line-height: normal;
+  /* Default line height */
+  letter-spacing: normal;
+  /* Default letter spacing */
   text-align: left;
 }
-.decs{
+
+.decs {
   color: #CCD1FF;
   font-weight: 300;
   font-size: 19px;
@@ -83,28 +93,39 @@
 }
 
 #leftSideBar {
-  display: block;
+  /*display: block;*/
   background: #2A2726;
   color: white;
   width: 300px;
   margin-left: 0px;
   justify-content: center;
-  position: fixed; /* 固定位置 */
-  top: 0; /* 顶部对齐 */
-  bottom: 0; /* 底部对齐 */
+  position: fixed;
+  /* 固定位置 */
+  top: 0;
+  /* 顶部对齐 */
+  bottom: 0;
+  /* 底部对齐 */
+  display: flex;
+  flex-direction: column;
+
 }
 
 @media (max-width: 1000px) {
   #leftSideBar {
-    display: none; /* 隐藏 Sidebar */
-    width: 0; /* 移除宽度，防止占用空间 */
+    display: none;
+    /* 隐藏 Sidebar */
+    width: 0;
+    /* 移除宽度，防止占用空间 */
   }
+
   /* 显示一个图标来控制 Sidebar 显示 */
   .sidebar-icon {
     display: block;
     position: fixed;
-    top: 10px; /* 调整为合适的位置 */
-    left: 10px; /* 调整为合适的位置 */
+    top: 10px;
+    /* 调整为合适的位置 */
+    left: 10px;
+    /* 调整为合适的位置 */
     z-index: 1000;
     /* 添加图标样式 */
   }
@@ -112,22 +133,35 @@
 
 #chatContainer {
   background: black;
-  width: 1636px; /* 宽度为 1636px */
-  max-width: calc(100% - 16px); /* 确保最大宽度不超过屏幕宽度减去两边的间距 */
-  margin-right: auto; /* 右侧自动填充空白 */
-  margin-left: calc(300px ); /* 左侧自动填充空白 */
-  margin-bottom: 68px; /* 底部距离固定为 68px */
-  height: calc(100vh - 68px); /* 高度为视窗高度减去底部距离 */
+  width: 1636px;
+  /* 宽度为 1636px */
+  max-width: calc(100% - 16px);
+  /* 确保最大宽度不超过屏幕宽度减去两边的间距 */
+  margin-right: auto;
+  /* 右侧自动填充空白 */
+  margin-left: calc(300px);
+  /* 左侧自动填充空白 */
+  margin-bottom: 68px;
+  /* 底部距离固定为 68px */
+  height: calc(100vh - 68px);
+  /* 高度为视窗高度减去底部距离 */
 }
+
 @media (max-width: 1000px) {
   #chatContainer {
-    width: calc(100% - 32px); /* 屏幕宽度减去两边的间距 */
-    margin-left: 16px; /* 左侧间距 */
-    margin-right: 16px; /* 右侧间距 */
-    margin-bottom: 68px; /* 底部距离固定为 68px */
-    height: calc(100vh - 68px); /* 高度为视窗高度减去底部距离 */
+    width: calc(100% - 32px);
+    /* 屏幕宽度减去两边的间距 */
+    margin-left: 16px;
+    /* 左侧间距 */
+    margin-right: 16px;
+    /* 右侧间距 */
+    margin-bottom: 68px;
+    /* 底部距离固定为 68px */
+    height: calc(100vh - 68px);
+    /* 高度为视窗高度减去底部距离 */
   }
 }
+
 #chatt {
   height: 80vh;
   overflow-y: scroll;
@@ -135,25 +169,31 @@
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
-  margin-top:70px;
+  margin-top: 70px;
 }
 
 ::-webkit-scrollbar {
-  width: 12px; /* 滚动条的宽度 */
+  width: 12px;
+  /* 滚动条的宽度 */
 }
 
 ::-webkit-scrollbar-track {
-  background: black; /* 滚动条轨道的背景色 */
+  background: black;
+  /* 滚动条轨道的背景色 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #888; /* 滚动条本身的颜色 */
-  border-radius: 6px; /* 滚动条的圆角 */
-  border: 3px solid black; /* 滚动条边框 */
+  background-color: #888;
+  /* 滚动条本身的颜色 */
+  border-radius: 6px;
+  /* 滚动条的圆角 */
+  border: 3px solid black;
+  /* 滚动条边框 */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; /* 鼠标悬停时滚动条的颜色 */
+  background: #555;
+  /* 鼠标悬停时滚动条的颜色 */
 }
 
 #botWindow {
@@ -216,7 +256,7 @@
   padding: 5px;
   border: 1px solid #45717F;
   border-radius: 10px;
- 
+
 }
 
 .radio-buttons input[type='radio'] {
@@ -245,7 +285,7 @@
   margin-top: 20px;
   margin-bottom: 5px;
   float: left;
-  color:#59DAFF;
+  color: #59DAFF;
 }
 
 .inputs input[type='text'] {
@@ -256,7 +296,7 @@
   margin-top: 10px;
   border: 1px solid #454A5B;
   border-radius: 5px;
-  color:#59DAFF;
+  color: #59DAFF;
 }
 
 .llm-selection {
@@ -305,7 +345,8 @@
   margin-bottom: 2px;
   float: right;
 }
-.senderNameLeft{
+
+.senderNameLeft {
   font-size: 0.85em;
   color: #7E9CA9;
   /* Grey color for the sender's name */
@@ -319,7 +360,7 @@
   white-space: pre-wrap;
   /* Preserves whitespace and formatting */
   /* CSS 2.0 */
-  
+
   white-space: -moz-pre-wrap;
   /* Mozilla */
   white-space: -pre-wrap;
@@ -329,6 +370,7 @@
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
 }
+
 @keyframes spin {
   to {
     -webkit-transform: rotate(360deg);
@@ -339,4 +381,142 @@
   to {
     -webkit-transform: rotate(360deg);
   }
+}
+
+.created-by-section {
+  display: flex;
+  align-items: center;
+  /* Align the image and text vertically */
+  margin-top: auto;
+  /* Pushes it to the bottom of the container */
+  font-size: 0.8em;
+  color: #59DAFF;
+  padding: 10px;
+}
+
+.creator-image {
+  width: 20px;
+  /* or the size you prefer */
+  height: 20px;
+  /* or the size you prefer */
+  margin-right: 5px;
+  /* Adjust spacing between image and text */
+}
+
+/* For the container that holds the code file section */
+.code-file-section {
+  padding: 10px;
+  border-top: 0.5px solid #AEC0FF;
+}
+
+.fileBox {
+  margin: 10px 0px 0px 0px;
+  background-color: black;
+  padding: 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 0.5px solid #418192;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+  max-height: 50px;
+}
+
+.section-title {
+  color: #59DAFF;
+}
+
+/* Scrollbar Styling */
+.code-file-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.code-file-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.code-file-section::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.code-file-section::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* File List Item Styling */
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  /* Enable scrolling */
+  max-height: 200px;
+  /* Adjust to your container's height */
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  /* Spacing between items */
+  color: #fff;
+  /* Text color */
+  cursor: pointer;
+}
+
+.file-item i {
+  /* Use the appropriate class for the file icon */
+  margin-right: 10px;
+  /* Spacing between icon and text */
+  color: #4CAF50;
+  /* Icon color, adjust as needed */
+}
+
+/* Download All Button Styling */
+.download-all {
+  display: flex;
+  justify-content: space-between;
+  /* Aligns content to the sides */
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #333;
+  /* Dark background */
+  color: #418192;
+  /* Text color */
+  border: 0.5px solid #418192;
+  padding: 10px 20px;
+  cursor: pointer;
+  /* Rounded corners */
+  display: block;
+  font-size: 14px;
+  height: 20px;
+}
+
+.download-all:hover {
+  background-color: #0056b3;
+  /* Darker background on hover */
+}
+
+.download-text {
+  float: left;
+}
+
+.download-icon {
+  /* Adjust the size of the icon if necessary */
+  width: 20px;
+  height: 20px;
+  float: right;
+}
+
+/* Optional: Remove default button styling if you decide to use a button element */
+button.downloadBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }

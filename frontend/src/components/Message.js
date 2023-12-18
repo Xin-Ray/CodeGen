@@ -1,6 +1,8 @@
 import React from 'react'
 import { io } from 'socket.io-client';
 import CodeDisplay from './CodeDisplay';
+import githubImage from '../images/github.jpeg';
+import downloadImage from '../images/download.jpeg';
 
 
 class Message extends React.Component {
@@ -13,7 +15,15 @@ class Message extends React.Component {
         baseUrl: '',
         loading: false,
         url: 'http://127.0.0.1:5002',
-        code: ''
+        code: '',
+        creator: 'Codegen Team',
+        files: [
+            { name: 'Dummy1.py', type: 'python' },
+            { name: 'Dummy2.py', type: 'python' },
+            { name: 'Dummy3.py', type: 'python' },
+            { name: 'Dummy4.py', type: 'python' },
+            // ... other files
+        ],
     }
 
     handleKeyPress = (event) => {
@@ -49,9 +59,6 @@ class Message extends React.Component {
 
             socket.emit('message', { content: this.state.msg });
 
-
-
-
             let responseMsg = '';
 
             socket.on('message', data => {
@@ -71,22 +78,27 @@ class Message extends React.Component {
                         // Extract the code using the patterns for Python or Shell
                         const extractedCode = extractCode(responseMsg);
 
-                        // Update only the code in the state for CodeDisplay, do not add it to the chat
-                        //this.setState({ code: extractedCode });
-                        this.setState(prevState => ({
-                            chat: [...prevState.chat, { from: senderName, code: extractedCode }],
-                            loading: false // Turn off loading state after receiving the response
-                        }));
-
+                        // Add the new message with code
+                        addMessageToChat(senderName, null, extractedCode);
                     } else {
-                        // If it's not code, add it to the chat history
-                        this.setState(prevState => ({
-                            chat: [...prevState.chat, { from: senderName, msg: responseMsg }],
-                            loading: false // Turn off loading state after receiving the response
-                        }));
+                        // Check for repetitive messages
+                        const lastMessage = this.state.chat[this.state.chat.length - 1];
+                        if (!lastMessage || lastMessage.from !== senderName || lastMessage.msg !== responseMsg) {
+                            // If the message is new, add it to the chat history
+                            addMessageToChat(senderName, responseMsg);
+                        }
                     }
                 }
             });
+
+            // Utility function to add a message to the chat
+            const addMessageToChat = (senderName, msg, code = null) => {
+                this.setState(prevState => ({
+                    chat: [...prevState.chat, { from: senderName, msg, code }],
+                    loading: false // Turn off loading state after receiving the response
+                }));
+            };
+
 
             // Add the extractCode function in the same scope as your socket event listener
             const extractCode = (response) => {
@@ -112,7 +124,25 @@ class Message extends React.Component {
                 };
             });
         }
+
     }
+    handleDownload = () => {
+        // This example assumes you have the file you want to download available at a certain URL
+        const fileUrl = 'path_to_your_file/websocket.py'; // URL to the file
+        const fileName = 'websocket.py'; // Name of the file to download
+
+        // Create a new anchor element dynamically
+        const anchorElement = document.createElement('a');
+        anchorElement.href = fileUrl;
+        anchorElement.download = fileName; // The download attribute specifies that the target will be downloaded
+
+        // Append anchor to the body
+        document.body.appendChild(anchorElement);
+        // Trigger the download by simulating a click on the anchor
+        anchorElement.click();
+        // Clean up: remove anchor from body
+        document.body.removeChild(anchorElement);
+    };
 
     render() {
         return (
@@ -204,8 +234,31 @@ class Message extends React.Component {
                                 )}
                             </form>
                         </div>
-
                     </div>
+                    <div className="code-file-section">
+                        <div className="section-title">Code File</div>
+                        <div className="fileBox">
+                            <div><ul className="file-list">
+                                {this.state.files.map((file, index) => (
+                                    <li key={index} className="file-item">
+                                        <i className="file-icon"></i> {/* Replace with actual icon */}
+                                        {file.name}
+                                    </li>
+                                ))}
+                            </ul>
+                            </div>
+
+                        </div>
+                        <div className="download-all" onClick={() => this.handleDownload()}>
+                            <span className="download-text">Download All</span>
+                            <img src={downloadImage} alt="Download" className="download-icon" />
+                        </div>
+                    </div>
+                    <div className="created-by-section">
+                        <img src={githubImage} alt="GitHub" className="creator-image" />
+                        <span>Created by {this.state.creator}</span>
+                    </div>
+
                 </div>
                 <div id="chatContainer">
 
