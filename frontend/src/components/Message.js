@@ -1,6 +1,6 @@
 import React from 'react'
 import { io } from 'socket.io-client';
-
+import CodeDisplay from './CodeDisplay';
 
 
 class Message extends React.Component {
@@ -12,7 +12,8 @@ class Message extends React.Component {
         apiKey: '',
         baseUrl: '',
         loading: false,
-        url: 'http://127.0.0.1:5002'
+        url: 'http://127.0.0.1:5002',
+        code: ''
     }
 
     handleKeyPress = (event) => {
@@ -27,7 +28,9 @@ class Message extends React.Component {
         //console.log(e.target.value);
         this.setState({ msg: e.target.value });
     }
-
+    handleNewCode = (newCode) => {
+        this.setState({ code: newCode });
+    };
     handleSend = () => {
         this.setState({ loading: true });
         //socket connection
@@ -56,17 +59,49 @@ class Message extends React.Component {
                 console.log('The data:', data.data);
                 console.log('The sender:', data.sender);
 
+                if (data.sender !== 'Admin') {
+                    this.setState({ loading: false });
+                    let senderName = data.sender;
+                    let actionMessage = data.data;
+                    let responseMsg = actionMessage || "Response from the server";
 
-                this.setState({ loading: false });
-                let senderName = data.sender;
-                let actionMessage = data.data;
-                responseMsg = actionMessage || "Response from the server";
+                    // Check if the message is a code response
+                    const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
+                    if (codeResponsePattern.test(responseMsg)) {
+                        // Extract the code using the patterns for Python or Shell
+                        const extractedCode = extractCode(responseMsg);
 
-                this.setState(prevState => ({
-                    chat: [...prevState.chat, { from: senderName, msg: responseMsg }],
-                    loading: false // Turn off loading state after receiving the response
-                }));
+                        // Update only the code in the state for CodeDisplay, do not add it to the chat
+                        //this.setState({ code: extractedCode });
+                        this.setState(prevState => ({
+                            chat: [...prevState.chat, { from: senderName, code: extractedCode }],
+                            loading: false // Turn off loading state after receiving the response
+                        }));
+
+                    } else {
+                        // If it's not code, add it to the chat history
+                        this.setState(prevState => ({
+                            chat: [...prevState.chat, { from: senderName, msg: responseMsg }],
+                            loading: false // Turn off loading state after receiving the response
+                        }));
+                    }
+                }
             });
+
+            // Add the extractCode function in the same scope as your socket event listener
+            const extractCode = (response) => {
+                const pythonPattern = /'''([\s\S]*?)'''/; // For Python
+                const shellPattern = /```([\s\S]*?)```/; // For Shell
+
+                let match = response.match(pythonPattern);
+                if (match) return match[1];
+
+                match = response.match(shellPattern);
+                if (match) return match[1];
+
+                return 'No code found.';
+            };
+
 
 
             // Adding message bubble for the user's message immediately
@@ -84,8 +119,6 @@ class Message extends React.Component {
             <div id="fullscreen"  >
                 <div id="leftSideBar">
                     <div className="information">
-                        <div className="agent-info">CodeGen</div>
-                        <div className="decs">Code Agent, automatically run and execute code</div>
                         <div className="llm-selection">
                             <form>
                                 <div className="radio-buttons">
@@ -185,7 +218,9 @@ class Message extends React.Component {
                                     <div key={index} className="messageContainer">
                                         <div id="botWindow" className="codeFormat">
                                             <div className="senderNameLeft">{msg.from}</div> {/* dynamic group agent */}
-                                            <div>{msg.msg}
+                                            <div>
+                                                {msg.code && <CodeDisplay code={msg.code} />}
+                                                {msg.msg}
                                             </div>
                                         </div>
                                     </div>

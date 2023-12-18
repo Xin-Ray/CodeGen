@@ -1,0 +1,10 @@
+/* Style for the code display component */
+.syntax-highlighter {
+    overflow: auto; /* Enables scrolling */
+    max-height: 400px; /* Or whatever maximum height you prefer */
+    background-color: black; /* Dark background for the code */
+    padding: 15px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Box shadow for elevation effect */
+    margin: 20px; /* Spacing around the component */
+  }

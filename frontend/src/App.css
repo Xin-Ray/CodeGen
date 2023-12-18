@@ -1,16 +1,34 @@
 .App {
-  text-align: center;
+  width: 100%;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
+.Message {
+  width: 100%;
+  margin-top: 50px; /* Adjust this value to the height of your header */
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+.header-style{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  text-align: left;
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  z-index: 1000;
+  border-bottom:0.5px solid #AEC0FF;
 }
 
 /* .App-header {
@@ -43,6 +61,7 @@
 
 .information {
   padding: 10px;
+  margin-top:70px;
 }
 .agent-info{
   color:#AEC0FF;
@@ -53,19 +72,21 @@
   text-align: left;
 }
 .decs{
-  color:#CCD1FF;
-  font-weight: 300; /* Light font weight */
-  font-size: 24px; /* Font size */
-  line-height: normal; /* Default line height */
-  letter-spacing: normal; /* Default letter spacing */
-  text-align: left; 
+  color: #CCD1FF;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 12px;
 }
 
 #leftSideBar {
   display: block;
   background: #2A2726;
   color: white;
-  width: 400px;
+  width: 300px;
   margin-left: 0px;
   justify-content: center;
   position: fixed; /* 固定位置 */
@@ -94,7 +115,7 @@
   width: 1636px; /* 宽度为 1636px */
   max-width: calc(100% - 16px); /* 确保最大宽度不超过屏幕宽度减去两边的间距 */
   margin-right: auto; /* 右侧自动填充空白 */
-  margin-left: calc(400px ); /* 左侧自动填充空白 */
+  margin-left: calc(300px ); /* 左侧自动填充空白 */
   margin-bottom: 68px; /* 底部距离固定为 68px */
   height: calc(100vh - 68px); /* 高度为视窗高度减去底部距离 */
 }
@@ -108,12 +129,13 @@
   }
 }
 #chatt {
-  height: 85vh;
+  height: 80vh;
   overflow-y: scroll;
   overflow-x: hidden;
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
+  margin-top:70px;
 }
 
 ::-webkit-scrollbar {
@@ -139,7 +161,7 @@
   font-size: 17px;
   margin-bottom: 10px;
   border-radius: 5px;
-  margin-right: 500px;
+  margin-right: 600px;
   padding: 10px;
   background-color: #E1E1E2;
   color: #284856;
@@ -153,7 +175,7 @@
   margin-right: 20px;
   margin-bottom: 10px;
   border-radius: 5px;
-  margin-left: 500px;
+  margin-left: 600px;
   padding: 10px;
   background-color: #C4CBCD;
   float: right;
@@ -204,7 +226,7 @@
 
 .radio-buttons label {
   background-color: #45717F;
-  padding: 10px 75px;
+  padding: 10px 50px;
   border-radius: 5px;
   display: inline-block;
   cursor: pointer;

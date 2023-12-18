@@ -3,12 +3,11 @@ import './App.css';
 import Header from './components/header'
 import Message from './components/Message'
 class App extends React.Component {
-  render()
-  {
+  render() {
     return (
-      <div  className="App">
+      <div className="App">
         <Header />
-        <Message/>
+        <Message className="Message" />
       </div>
     );
   }
