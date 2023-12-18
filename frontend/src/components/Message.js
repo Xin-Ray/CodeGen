@@ -3,6 +3,9 @@ import { io } from 'socket.io-client';
 import CodeDisplay from './CodeDisplay';
 import githubImage from '../images/github.jpeg';
 import downloadImage from '../images/download.jpeg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 
 class Message extends React.Component {
@@ -294,16 +297,25 @@ class Message extends React.Component {
 
                     </div>
 
-                    <div id="chatCont" >
-                        <input type='text' name='msg' id="msgText"
+                    <div className="input-group">
+                        <button className="add-file-btn">
+                            <FontAwesomeIcon icon={faPlus} />
+                        </button>
+                        <input type='text'
+                            name='msg'
+                            id="msgText"
+                            placeholder="Type your message here..."
                             onChange={(e) => this.handleChange(e)}
                             onKeyDown={(e) => this.handleKeyPress(e)}
                             class="form-control"
                             value={this.state.msg} />
-                        <button id="submitBtn" onClick={() => this.handleSend()}
+                        <button id="submitBtn"
+                            onClick={() => this.handleSend()}
                             type="submit"
-                            class="btn btn-primary">Send</button>
+                            class="btn btn-primary"> <FontAwesomeIcon icon={faPaperPlane} /></button>
                     </div>
+
+
                 </div>
             </div >
         )
