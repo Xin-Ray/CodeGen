@@ -39,7 +39,7 @@ class Message extends React.Component {
         msg: '',
         sender: '',
         modelType: 'GPT',
-        apiKey: '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',
+        apiKey: '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',
         baseUrl: 'https://alert-passengers-alexandria-mat.trycloudflare.com/v1',
         loading: false,
         url: 'http://127.0.0.1:5003',
@@ -94,13 +94,18 @@ class Message extends React.Component {
                 };
                 // Check if the message is a code response
                 const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
+                
                 if (codeResponsePattern.test(responseMsg)) {
                     // Extract the code using the patterns for Python or Shell
                     const extractedCode = extractCode(responseMsg);
-
+                  
+                    // Remove the extracted code from the response message
+                    const messageWithoutCode = responseMsg.replace(extractedCode, '').trim();
+                  
                     // Add the new message with code
-                    addMessageToChat(senderName, null, extractedCode);
-                } else {
+                    addMessageToChat(senderName, messageWithoutCode, extractedCode);
+                  }
+                 else {
                     // Check for repetitive messages
                     const lastMessage = this.state.chat[this.state.chat.length - 1];
                     if (!lastMessage || lastMessage.from !== senderName || lastMessage.msg !== responseMsg) {
