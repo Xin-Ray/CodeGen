@@ -2,7 +2,7 @@ import React from 'react'
 import { io } from 'socket.io-client';
 import CodeDisplay from './CodeDisplay';
 import githubImage from '../images/github.jpeg';
-import downloadImage from '../images/download.jpeg';
+import downloadImage from '../images/download.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -15,7 +15,7 @@ function base64ToBlob(base64Data, contentType) {
     for (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
-    
+
     const byteArray = new Uint8Array(byteNumbers);
 
     // Create a blob from the byte array
@@ -39,8 +39,8 @@ class Message extends React.Component {
         msg: '',
         sender: '',
         modelType: 'GPT',
-        apiKey: '',
-        baseUrl: '',
+        apiKey: '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',
+        baseUrl: 'https://alert-passengers-alexandria-mat.trycloudflare.com/v1',
         loading: false,
         url: 'http://127.0.0.1:5003',
         code: '',
@@ -60,12 +60,12 @@ class Message extends React.Component {
             console.log('Connected to the server');
         });
 
-        
+
         this.socket.on('message', data => {
             console.log('Received message:', data);
             console.log('The data:', data.data);
             console.log('The sender:', data.sender);
-            
+
             if (data.sender !== 'Admin') {
                 this.setState({ loading: false });
                 let senderName = data.sender;
@@ -77,19 +77,19 @@ class Message extends React.Component {
                         loading: false // Turn off loading state after receiving the response
                     }));
                 };
-    
-    
+
+
                 // Add the extractCode function in the same scope as your socket event listener
                 const extractCode = (response) => {
                     const pythonPattern = /'''([\s\S]*?)'''/; // For Python
                     const shellPattern = /```([\s\S]*?)```/; // For Shell
-    
+
                     let match = response.match(pythonPattern);
                     if (match) return match[1];
-    
+
                     match = response.match(shellPattern);
                     if (match) return match[1];
-    
+
                     return 'No code found.';
                 };
                 // Check if the message is a code response
@@ -117,12 +117,12 @@ class Message extends React.Component {
                 receivedFiles: [...prevState.receivedFiles, fileInfo],
             })); // Use the actual filename
         });
-        
+
     }
     // file upload
     fileInput = React.createRef();
 
-    
+
     // Trigger file input click
     handleFileSelectAndUpload = () => {
         this.fileInput.current.click();
@@ -145,7 +145,7 @@ class Message extends React.Component {
         if (selectedFile) {
             this.socket.emit('update_api_key', { 'api_key': this.state.apiKey });
 
-        //sending base URL for LLM
+            //sending base URL for LLM
             this.socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -155,8 +155,8 @@ class Message extends React.Component {
                         .reduce((data, byte) => data + String.fromCharCode(byte), '')
                 );
                 this.socket.emit('file-upload', {
-                    data:base64String,
-                    name:selectedFile.name,
+                    data: base64String,
+                    name: selectedFile.name,
                 });
             };
             reader.readAsArrayBuffer(selectedFile);
@@ -205,7 +205,7 @@ class Message extends React.Component {
 
             this.socket.emit('message', { content: this.state.msg });
 
-            
+
             // Utility function to add a message to the chat
             // Adding message bubble for the user's message immediately
             this.setState(prevState => {
@@ -217,23 +217,24 @@ class Message extends React.Component {
         }
 
     }
-    // handleDownload = () => {
-    //     // This example assumes you have the file you want to download available at a certain URL
-    //     const fileUrl = 'path_to_your_file/websocket.py'; // URL to the file
-    //     const fileName = 'websocket.py'; // Name of the file to download
 
-    //     // Create a new anchor element dynamically
-    //     const anchorElement = document.createElement('a');
-    //     anchorElement.href = fileUrl;
-    //     anchorElement.download = fileName; // The download attribute specifies that the target will be downloaded
+    handleDownload = () => {
+        // This example assumes you have the file you want to download available at a certain URL
+        const fileUrl = 'path_to_your_file/websocket.py'; // URL to the file
+        const fileName = 'websocket.py'; // Name of the file to download
 
-    //     // Append anchor to the body
-    //     document.body.appendChild(anchorElement);
-    //     // Trigger the download by simulating a click on the anchor
-    //     anchorElement.click();
-    //     // Clean up: remove anchor from body
-    //     document.body.removeChild(anchorElement);
-    // };
+        // Create a new anchor element dynamically
+        const anchorElement = document.createElement('a');
+        anchorElement.href = fileUrl;
+        anchorElement.download = fileName; // The download attribute specifies that the target will be downloaded
+
+        // Append anchor to the body
+        document.body.appendChild(anchorElement);
+        // Trigger the download by simulating a click on the anchor
+        anchorElement.click();
+        // Clean up: remove anchor from body
+        document.body.removeChild(anchorElement);
+    };
 
     render() {
         const { receivedFiles } = this.state;
@@ -337,9 +338,11 @@ class Message extends React.Component {
                         <div className="fileBox">
                             {receivedFiles.map((file, index) => (
                                 <button key={index} onClick={() => handleDownload(file)} className="download-btn">
-                                    Download {file.fileName}
+                                    <span className="download-text"> {file.fileName.length > 20 ? `${file.fileName.substring(0, 17)}...` : file.fileName}</span>
+                                    <img src={downloadImage} alt="Download" className="download-icon" />
                                 </button>
                             ))}
+
                             {/* <div><ul className="file-list">
                                 {this.state.files.map((file, index) => (
                                     <li key={index} className="file-item">
@@ -350,6 +353,10 @@ class Message extends React.Component {
                             </ul>
                             </div> */}
 
+                        </div>
+                        <div className="download-all" onClick={() => this.handleDownload()}>
+                            <span className="download-text">Download All</span>
+                            <img src={downloadImage} alt="Download" className="download-icon" />
                         </div>
                         {/* <div className="download-all" onClick={() => this.handleDownload()}>
                             <span className="download-text">Download All</span>
@@ -398,14 +405,14 @@ class Message extends React.Component {
 
                     <div className="input-group">
                         <div>
-                            <input 
-                                type="file" 
-                                onChange={this.handleFileChange} 
-                                style={{ display: 'none' }} 
+                            <input
+                                type="file"
+                                onChange={this.handleFileChange}
+                                style={{ display: 'none' }}
                                 ref={this.fileInput}
                             />
                             <button onClick={this.handleFileSelectAndUpload} class="btn btn-secondary  add-file-btn">
-                            <FontAwesomeIcon icon={faPlus} />
+                                <FontAwesomeIcon icon={faPlus} />
                             </button>
                         </div>
                         <input type='text'
@@ -420,9 +427,9 @@ class Message extends React.Component {
                             onClick={() => this.handleSend()}
                             type="submit"
                             class="btn btn-primary"> <FontAwesomeIcon icon={faPaperPlane} /></button>
-                        
+
                     </div>
-                    
+
                 </div>
             </div >
         )

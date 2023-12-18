@@ -1,6 +1,6 @@
 .App {
   width: 100%;
-  overflow-x: hidden;
+  /*overflow-x: hidden;*/
 }
 
 .App-logo {
@@ -369,6 +369,7 @@
   font-size: 0.8em;
   color: #59DAFF;
   padding: 10px;
+  margin-bottom: 25px;
 }
 
 .creator-image {
@@ -392,12 +393,13 @@
   padding: 20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
   border: 0.5px solid #418192;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  overflow-x: auto;
-  max-height: 50px;
+  /*overflow-y: auto;*/
+  max-height: 108px;
+  overflow-x: hidden;
 }
 
 .section-title {
@@ -475,7 +477,7 @@
 }
 
 .download-all:hover {
-  background-color: #0056b3;
+  background-color: #919fad;
   /* Darker background on hover */
 }
 
@@ -552,12 +554,15 @@ button.downloadBtn {
 #uploadCont {
   display: flex;
   align-items: center;
-  margin: 0; /* Remove extra margin */
+  margin: 0;
+  /* Remove extra margin */
 }
 
 #uploadCont button {
-  background-color: rgba(239, 239, 244, 0.9); /* Green background */
-  color: white; /* White text */
+  background-color: rgba(239, 239, 244, 0.9);
+  /* Green background */
+  color: white;
+  /* White text */
   border: none;
   border-radius: 3px;
   padding: 10px;
@@ -587,26 +592,42 @@ button.downloadBtn {
 .add-file-btn i {
   font-size: 20px;
 }
+
 /* Style for the download button */
 .download-btn {
   padding: 10px 15px;
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  margin: 5px; /* Some space around buttons */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effect */
-  text-decoration: none; /* No underline */
-  font-size: 1em; /* Default font size */
+  background-color: #000;
+  /* Green background */
+  color: #418192;;
+  /* White text */
+  border: none;
+  /* No border */
+  border-radius: 5px;
+  /* Rounded corners */
+  margin: 5px;
+  /* Some space around buttons */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  transition: background-color 0.3s, transform 0.3s;
+  /* Smooth transition for hover effect */
+  text-decoration: none;
+  /* No underline */
+  font-size: 1em;
+  /* Default font size */
+  margin-right:20px;
+  width: 100%;
 }
 
 .download-btn:hover {
-  background-color: #45a049; /* Darker shade of green on hover */
-  transform: translateY(-2px); /* Slight raise on hover */
+  background-color: #454A5B;
+  /* Darker shade of green on hover */
+  transform: translateY(-2px);
+  /* Slight raise on hover */
 }
 
 .download-btn:active {
-  background-color: #387C3B; /* Even darker green when active */
-  transform: translateY(1px); /* Push down on click */
+  background-color: #454A5B;
+  /* Even darker green when active */
+  transform: translateY(1px);
+  /* Push down on click */
 }
