@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
+// Utility functions to convert Base64 data to Blob and Blob to File
 function base64ToBlob(base64Data, contentType) {
     const byteCharacters = atob(base64Data);
 
@@ -21,6 +22,8 @@ function base64ToBlob(base64Data, contentType) {
     // Create a blob from the byte array
     return new Blob([byteArray], { type: contentType });
 }
+
+// Utility function to download a blob
 function downloadBlob(blob, filename) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -34,33 +37,44 @@ function downloadBlob(blob, filename) {
 }
 
 class Message extends React.Component {
-    state = {
-        chat: [],
-        msg: '',
-        sender: '',
-        modelType: 'GPT',
-        apiKey: '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',
-        baseUrl: 'https://alert-passengers-alexandria-mat.trycloudflare.com/v1',
-        loading: false,
-        url: 'http://127.0.0.1:5003',
-        code: '',
-        creator: 'Codegen Team',
-        files: [
-            { name: 'Dummy1.py', type: 'python' },
-            { name: 'Dummy2.py', type: 'python' },
-            { name: 'Dummy3.py', type: 'python' },
-            { name: 'Dummy4.py', type: 'python' },
-            // ... other files
-        ],
-        receivedFiles: [],
+    constructor(props) {
+        super(props);
+        this.state = {
+            chat: [],
+            msg: '',
+            sender: '',
+            modelType: sessionStorage.getItem('modelType') || 'GPT',
+            LLMmodelName: sessionStorage.getItem('LLMmodelName') || '',
+            GPTmodelName: sessionStorage.getItem('GPTmodelName') || '', // 从 sessionStorage 获取 Model Name
+            apiKey: sessionStorage.getItem('apiKey') || '', // 从 sessionStorage 获取 API Key
+            baseUrl: sessionStorage.getItem('baseUrl')|| 'https://alert-passengers-alexandria-mat.trycloudflare.com/v1',
+            loading: false,
+            url: 'http://127.0.0.1:5003',
+            code: '',
+            creator: 'Codegen Team',
+            files: [
+                { name: 'Dummy1.py', type: 'python' },
+                { name: 'Dummy2.py', type: 'python' },
+                { name: 'Dummy3.py', type: 'python' },
+                { name: 'Dummy4.py', type: 'python' },
+                // ... 其他文件
+            ],
+            receivedFiles: [],
+        };
+        this.socket = null;
     }
+
+   
     componentDidMount() {
+        // connect Wbsocket with state
         this.socket = io(this.state.url);
+
+        // listen to the connection events
         this.socket.on('connect', () => {
             console.log('Connected to the server');
         });
 
-
+        //
         this.socket.on('message', data => {
             console.log('Received message:', data);
             console.log('The data:', data.data);
@@ -71,6 +85,8 @@ class Message extends React.Component {
                 let senderName = data.sender;
                 let actionMessage = data.data;
                 let responseMsg = actionMessage || "Response from the server";
+
+
                 const addMessageToChat = (senderName, msg, code = null) => {
                     this.setState(prevState => ({
                         chat: [...prevState.chat, { from: senderName, msg, code }],
@@ -92,6 +108,8 @@ class Message extends React.Component {
 
                     return 'No code found.';
                 };
+
+
                 // Check if the message is a code response
                 const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
                 
@@ -115,6 +133,8 @@ class Message extends React.Component {
                 }
             }
         });
+
+        // Listen to the file_received event
         this.socket.on('file_received', (fileInfo) => {
             // Assuming the data is a Base64 string and you have the filename
             console.log('Received file:', fileInfo.fileName);
@@ -124,6 +144,13 @@ class Message extends React.Component {
         });
 
     }
+
+    componentWillUnmount() {
+        if (this.socket) {
+            this.socket.close();
+        }
+    }
+
     // file upload
     fileInput = React.createRef();
 
@@ -172,11 +199,6 @@ class Message extends React.Component {
 
 
 
-
-
-
-
-
     handleKeyPress = (event) => {
         // Check if the pressed key is "Enter" (keyCode 13)
         if (event.key === 'Enter') {
@@ -189,9 +211,76 @@ class Message extends React.Component {
         //console.log(e.target.value);
         this.setState({ msg: e.target.value });
     }
+
     handleNewCode = (newCode) => {
         this.setState({ code: newCode });
     };
+
+    // model_type
+    handleModelTypeChange = (e) => {
+        const modelType = e.target.value;
+        this.setState({ modelType: modelType });
+
+        // update sessionStorage value
+        sessionStorage.setItem('modelType', modelType);
+    };
+
+    // ----------GPT-----------
+    // GPTModel Name inputbox: update the model name in the state
+    handleGPTModelNameChange = (e) => {
+        const GPTModelName = e.target.value;
+        this.setState({ GPTmodelName: GPTModelName });
+
+        // update sessionStorage value
+        sessionStorage.setItem('GPTmodelName', GPTModelName);
+    };
+
+    // API key inputbox : update the API key in the state
+    handleApiKeyChange = (e) => {
+        const newApiKey = e.target.value;
+        this.setState({apiKey : newApiKey});
+
+        // update sessionStorage value
+        sessionStorage.setItem('apiKey', newApiKey);
+    };
+
+    // ----------LLM-----------
+    // LLMModel Name inputbox: update the model name in the state
+    handleLLMModelNameChange = (e) => {
+        const LLMModelName = e.target.value;
+        this.setState({ LLMmodelName: LLMModelName });
+
+        // update sessionStorage value
+        sessionStorage.setItem('LLMmodelName', LLMModelName);
+    };
+
+    // LLM Base URL inputbox : update the base URL in the state
+    handleBaseUrlChange = (e) => {
+        const newBaseUrl = e.target.value;
+        this.setState({baseUrl : newBaseUrl});
+
+        // update sessionStorage value
+        sessionStorage.setItem('baseUrl', newBaseUrl);
+    };
+
+
+    // ----------Connection-----------
+    // Connection BUtton: send all information to the backend
+    handleConnect = () => {
+        // socket connection
+        if (this.socket) {
+            // sending model name
+            this.socket.emit('update_model_type', { model_type: this.state.modelType });
+            this.socket.emit('update_api_key', { api_key: this.state.apiKey });
+            this.socket.emit('update_LLM_base_url', { base_url: this.state.baseUrl });
+            this.socket.emit('update_GPTmodel_name', { GPTmodel_name: this.state.GPTmodelName });
+            this.socket.emit('update_LLMmodel_name', { LLMmodel_name: this.state.LLMmodelName });
+            console.log('Connection configuration updated');
+            console.log('Connection configuration updated with model type:', this.state.modelType);
+        }
+    };
+
+    // Send the message to the backend
     handleSend = () => {
         this.setState({ loading: true });
         //socket connection
@@ -199,15 +288,22 @@ class Message extends React.Component {
 
         //let socket = io(this.state.url);
         console.log("sending", this.state.url, this.state.loading)
-        //sending API key
-        this.socket.emit('update_api_key', { 'api_key': this.state.apiKey });
+        
+        //sending model name
+        // this.socket.emit('update_model_name', { 'GPTmodel_name': this.state.GPTmodelName });
+        // this.socket.emit('update_model_name', { 'LLMmodel_name': this.state.LLMmodelName });
 
-        //sending base URL for LLM
-        this.socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
+        //sending API key
+        // this.socket.emit('update_api_key', { 'api_key': this.state.apiKey });
+
+        // //sending base URL for LLM
+        // this.socket.emit('update_LLM_base_url', { 'base_url': this.state.baseUrl });
 
         if (this.state.msg !== '') {
-            this.setState({ loading: true }); // Indicate loading state
+            // Indicate loading state
+            this.setState({ loading: true }); 
 
+            // Send the message to the server
             this.socket.emit('message', { content: this.state.msg });
 
 
@@ -223,6 +319,7 @@ class Message extends React.Component {
 
     }
 
+    // file download
     handleDownload = () => {
         // This example assumes you have the file you want to download available at a certain URL
         const fileUrl = 'path_to_your_file/websocket.py'; // URL to the file
@@ -241,19 +338,29 @@ class Message extends React.Component {
         document.body.removeChild(anchorElement);
     };
 
+
+
     render() {
+
+        // recieved files
         const { receivedFiles } = this.state;
 
+        // file download
         const handleDownload = (fileInfo) => {
             const blob = base64ToBlob(fileInfo.fileData, fileInfo.mimeType);
             downloadBlob(blob, fileInfo.fileName);
         };
+
+
+
+        // render component for the code file
         return (
             <div id="fullscreen"  >
                 <div id="leftSideBar">
                     <div className="information">
                         <div className="llm-selection">
                             <form>
+                                {/* sidebar: Radio buttons for selecting the model type */}
                                 <div className="radio-buttons">
                                     <input
                                         type="radio"
@@ -261,7 +368,7 @@ class Message extends React.Component {
                                         name="modelType"
                                         value="GPT"
                                         checked={this.state.modelType === 'GPT'}
-                                        onChange={(e) => this.setState({ modelType: e.target.value })}
+                                        onChange={this.handleModelTypeChange}
                                     />
                                     <label htmlFor="gpt">GPT</label>
 
@@ -271,51 +378,63 @@ class Message extends React.Component {
                                         name="modelType"
                                         value="LLM"
                                         checked={this.state.modelType === 'LLM'}
-                                        onChange={(e) => this.setState({ modelType: e.target.value })}
+                                        onChange={this.handleModelTypeChange}
                                     />
                                     <label htmlFor="llm">LLM</label>
                                 </div>
-                                {this.state.modelType === 'GPT' && (
+
+                                
+                                {//sidebar: GPT information, model name, url name and key name
+                                this.state.modelType === 'GPT' && (
                                     <div className="inputs">
-                                        <label htmlFor="modelName">Model Name</label>
+                                        <label htmlFor="GPTmodelName">Model Name</label>
                                         <input
                                             type="text"
-                                            id="modelName"
-                                            placeholder="Model Name"
-                                            value={this.state.modelName}
-                                            onChange={(e) => this.setState({ modelName: e.target.value })}
+                                            id="GPTmodelName"
+                                            placeholder="gpt-4-1106-preview"
+                                            value={this.state.GPTmodelName}
+                                            // onChange={(e) => this.setState({ modelName: e.target.value })}
+                                            onChange={this.handleGPTModelNameChange}
                                         />
-                                        <label htmlFor="urlName">Websocket URL</label>
+                                        {/* <label htmlFor="urlName">Websocket URL</label>
                                         <input
                                             type="text"
                                             id="urlName"
                                             value={this.state.url}
                                             //onChange={this.handleUrlChange}
-                                            onChange={(e) => this.setState({ url: e.target.value })}
+                                            // onChange={(e) => this.setState({ url: e.target.value })}
+                                            onChange={handleURLChange} 
 
-                                        />
+                                        /> */}
                                         <label htmlFor="keyName">API Key</label>
                                         <input
                                             type="text"
                                             id="keyName"
                                             placeholder="API_Key"
-                                            value={this.state.apiKey}
-                                            onChange={(e) => this.setState({ apiKey: e.target.value })}
-                                        />
 
+                                            //save the API key in the state.apiKey
+                                            value={this.state.apiKey}
+
+                                            // triger the function to update the API key
+                                            // onChange={(e) => this.setState({ apiKey: e.target.value })}
+                                            onChange={this.handleApiKeyChange} 
+                                        />
                                     </div>
                                 )}
-                                {this.state.modelType === 'LLM' && (
+
+                                
+                                {// sidebar: LLM information, model name, url name and key name
+                                this.state.modelType === 'LLM' && (
                                     <div className="inputs">
-                                        <label htmlFor="modelName">Model Name</label>
+                                        <label htmlFor="LLMmodelName">Model Name</label>
                                         <input
                                             type="text"
-                                            id="modelName"
-                                            placeholder="Model Name"
-                                            value={this.state.modelName}
-                                            onChange={(e) => this.setState({ modelName: e.target.value })}
+                                            id="LLMmodelName"
+                                            placeholder="mistral-7b"
+                                            value={this.state.LLMmodelName}
+                                            onChange={this.handleLLMModelNameChange}
                                         />
-                                        <label htmlFor="urlName">URL</label>
+                                        {/* <label htmlFor="urlName">URL</label>
                                         <input
                                             type="text"
                                             id="urlName"
@@ -323,7 +442,7 @@ class Message extends React.Component {
                                             //onChange={this.handleUrlChange}
                                             onChange={(e) => this.setState({ url: e.target.value })}
 
-                                        />
+                                        /> */}
 
                                         <label htmlFor="keyName">Base URL</label>
                                         <input
@@ -331,13 +450,18 @@ class Message extends React.Component {
                                             id="baseUrl"
                                             placeholder="LLM Base URL"
                                             value={this.state.baseUrl}
-                                            onChange={(e) => this.setState({ baseUrl: e.target.value })}
+                                            onChange={this.handleBaseUrlChange}
                                         />
                                     </div>
                                 )}
+
+                                {/*connection button to save all infromation into sessionstate*/}
+                                <button onClick={this.handleConnect}>Connect</button>
                             </form>
                         </div>
                     </div>
+
+                    {/*sidebar: download codefile section*/}
                     <div className="code-file-section">
                         <div className="section-title">Code File</div>
                         <div className="fileBox">
@@ -378,8 +502,10 @@ class Message extends React.Component {
 
                     <div id='chatt'>
 
-                        {this.state.chat.map((msg, index) => {
+                        {// main window: the chat bubbles
+                        this.state.chat.map((msg, index) => {
                             let bubble = null;
+                            // right side chat bubble for user 
                             if (msg.from !== 'our') {
                                 bubble = (
                                     <div key={index} className="messageContainer">
@@ -392,7 +518,9 @@ class Message extends React.Component {
                                         </div>
                                     </div>
                                 );
+
                             } else if (msg.from === 'our' && msg.msg.trim() !== '') {
+                                // left side chat bubble for BOT
                                 bubble = (
                                     <div key={index} className="messageContainer">
                                         <div id="userWindow" className="codeFormat" >
@@ -409,6 +537,7 @@ class Message extends React.Component {
                     </div>
 
                     <div className="input-group">
+                        {/*add file button*/}
                         <div>
                             <input
                                 type="file"
@@ -420,6 +549,8 @@ class Message extends React.Component {
                                 <FontAwesomeIcon icon={faPlus} />
                             </button>
                         </div>
+
+                        {/*the message input box*/}
                         <input type='text'
                             name='msg'
                             id="msgText"
@@ -428,6 +559,8 @@ class Message extends React.Component {
                             onKeyDown={(e) => this.handleKeyPress(e)}
                             class="form-control"
                             value={this.state.msg} />
+
+                        {/*send message button*/}
                         <button id="submitBtn"
                             onClick={() => this.handleSend()}
                             type="submit"
