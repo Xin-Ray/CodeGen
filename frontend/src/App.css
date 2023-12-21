@@ -229,11 +229,10 @@
 
 
 .radio-buttons {
-  background-color: #45717F;
+  background-color: #363a49;
   padding: 5px;
-  border: 1px solid #45717F;
+  border: 1px solid #363a49;
   border-radius: 10px;
-
 }
 
 .radio-buttons input[type='radio'] {
@@ -242,7 +241,7 @@
 }
 
 .radio-buttons label {
-  background-color: #45717F;
+  background-color: #363a49;
   padding: 10px 45px;
   border-radius: 5px;
   display: inline-block;
@@ -384,7 +383,7 @@
 /* For the container that holds the code file section */
 .code-file-section {
   padding: 10px;
-  border-top: 0.5px solid #AEC0FF;
+  border-top: 0.5px solid #454a5b;
 }
 
 .fileBox {
@@ -575,7 +574,7 @@ button.downloadBtn {
 .add-file-btn {
   background-color: rgba(239, 239, 244, 0.9);
   border: none;
-  padding: 10px;
+  padding: 1px 2px;
   cursor: pointer;
   color: #B6CCD3;
   border-radius: 5px;
@@ -631,3 +630,20 @@ button.downloadBtn {
   transform: translateY(1px);
   /* Push down on click */
 }
+
+
+#connectButton {
+  background-color: #363A49; /* Green background */
+  color: #9cc4cf; /* White text */
+  padding: 7px 32px; /* Top and bottom padding of 15px, left and right padding of 32px */
+  text-align: center; /* Centered text */
+  text-decoration: none; /* No underline on the text */
+  display: inline-block; /* Inline-block display */
+  font-size: 16px; /* Font size */
+  margin-top: 30px; /* Margin around the button */
+  cursor: pointer; /* Cursor changes to pointer on hover */
+  border: none; /* No border */
+  border-radius: 8px; /* Rounded corners */
+  transition-duration: 0.4s;
+  margin-left: 25%;
+} 

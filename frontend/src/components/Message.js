@@ -456,7 +456,7 @@ class Message extends React.Component {
                                 )}
 
                                 {/*connection button to save all infromation into sessionstate*/}
-                                <button onClick={this.handleConnect}>Connect</button>
+                                <button id="connectButton" onClick={this.handleConnect}>Connect</button>
                             </form>
                         </div>
                     </div>
@@ -546,7 +546,7 @@ class Message extends React.Component {
                                 ref={this.fileInput}
                             />
                             <button onClick={this.handleFileSelectAndUpload} class="btn btn-secondary  add-file-btn">
-                                <FontAwesomeIcon icon={faPlus} />
+                                <FontAwesomeIcon icon={faPlus} style={{ fontSize: '20px', margin: '6px' }}/>
                             </button>
                         </div>
 
