@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { marked } from 'marked';
 import { io } from 'socket.io-client';
 import CodeDisplay from './CodeDisplay';
 import githubImage from '../images/github.jpeg';
@@ -36,10 +37,23 @@ function downloadBlob(blob, filename) {
     document.body.removeChild(a);
 }
 
+// deal with the formate error wich will cause generat more space lines during transfering script to html and then to markdown 
+function removeExtraParagraphs(htmlContent) {
+    // reduce multiple empty lines to a single empty line
+    return htmlContent.replace(/<p><\/p>\s*/g, '');
+}
+
+function normalizeMarkdown(markdownText) {
+    // remove extra empty lines
+    return markdownText.replace(/\n\s*\n/g, '\n\n');
+}
+
+
 class Message extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            // set the initial state
             chat: [],
             msg: '',
             sender: '',
@@ -74,63 +88,98 @@ class Message extends React.Component {
             console.log('Connected to the server');
         });
 
-        //
+        //listen socket events recieved message from the backend
         this.socket.on('message', data => {
+
+            //1. get data from the backend
             console.log('Received message:', data);
+
+            //data.data means message content
             console.log('The data:', data.data);
+
+            //data.sender means sender name
             console.log('The sender:', data.sender);
 
+            //2. update the state
             if (data.sender !== 'Admin') {
+                // 2.1 restore the loading state
                 this.setState({ loading: false });
                 let senderName = data.sender;
-                let actionMessage = data.data;
-                let responseMsg = actionMessage || "Response from the server";
+                let responseMsg = data.data || "Response from the server";
 
 
-                const addMessageToChat = (senderName, msg, code = null) => {
+                // 2.2 split the message into text and code with different types.
+                const splitMessage = (message) => {
+                    const parts = [];
+                    let currentPart = { type: 'text', content: '' };
+                    let inCodeBlock = false;
+                    let codeDelimiterCount = 0;
+                
+                    for (const char of message) {
+                        if (char === '`') {
+                            codeDelimiterCount++;
+                            if (codeDelimiterCount === 3) {
+                                if (inCodeBlock) {
+                                    // 结束代码块
+                                    currentPart.content += '```';
+                                    parts.push(currentPart);
+                                    currentPart = { type: 'text', content: '' };
+                                    inCodeBlock = false;
+                                } else {
+                                    // 开始代码块
+                                    if (currentPart.content.length > 0) {
+                                        parts.push(currentPart);
+                                    }
+                                    currentPart = { type: 'code', content: '```' };
+                                    inCodeBlock = true;
+                                }
+                                codeDelimiterCount = 0;
+                                continue;
+                            }
+                        } else if (codeDelimiterCount > 0) {
+                            for (let i = 0; i < codeDelimiterCount; i++) {
+                                currentPart.content += '`';
+                            }
+                            codeDelimiterCount = 0;
+                        }
+                
+                        currentPart.content += char;
+                    }
+                
+                    if (currentPart.content.length > 0) {
+                        parts.push(currentPart);
+                    }
+                
+                    return parts;
+                };
+                
+                // 2.3 add the message to the chat
+                const addMessageToChat = (senderName, parts) => {
                     this.setState(prevState => ({
-                        chat: [...prevState.chat, { from: senderName, msg, code }],
+                        chat: [...prevState.chat, { from: senderName, parts }],
                         loading: false // Turn off loading state after receiving the response
                     }));
                 };
+                // // Add the extractCode function in the same scope as your socket event listener
+                // const extractCode = (response) => {
+                //     const pythonPattern = /'''([\s\S]*?)'''/; // For Python
+                //     const shellPattern = /```([\s\S]*?)```/; // For Shell
 
+                //     let match = response.match(pythonPattern);
+                //     if (match) return match[1];
 
-                // Add the extractCode function in the same scope as your socket event listener
-                const extractCode = (response) => {
-                    const pythonPattern = /'''([\s\S]*?)'''/; // For Python
-                    const shellPattern = /```([\s\S]*?)```/; // For Shell
+                //     match = response.match(shellPattern);
+                //     if (match) return match[1];
 
-                    let match = response.match(pythonPattern);
-                    if (match) return match[1];
-
-                    match = response.match(shellPattern);
-                    if (match) return match[1];
-
-                    return 'No code found.';
-                };
+                //     return 'No code found.';
+                // };
 
 
                 // Check if the message is a code response
-                const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
-                
-                if (codeResponsePattern.test(responseMsg)) {
-                    // Extract the code using the patterns for Python or Shell
-                    const extractedCode = extractCode(responseMsg);
-                  
-                    // Remove the extracted code from the response message
-                    const messageWithoutCode = responseMsg.replace(extractedCode, '').trim();
-                  
-                    // Add the new message with code
-                    addMessageToChat(senderName, messageWithoutCode, extractedCode);
-                  }
-                 else {
-                    // Check for repetitive messages
-                    const lastMessage = this.state.chat[this.state.chat.length - 1];
-                    if (!lastMessage || lastMessage.from !== senderName || lastMessage.msg !== responseMsg) {
-                        // If the message is new, add it to the chat history
-                        addMessageToChat(senderName, responseMsg);
-                    }
-                }
+                // const codeResponsePattern = /(```|''')[\s\S]+(```|''')/;
+                console.log('message_process:',responseMsg);
+                const messageParts = splitMessage(responseMsg);
+                addMessageToChat(senderName, messageParts);
             }
         });
 
@@ -194,8 +243,6 @@ class Message extends React.Component {
             reader.readAsArrayBuffer(selectedFile);
         }
     };
-
-
 
 
 
@@ -351,6 +398,11 @@ class Message extends React.Component {
             downloadBlob(blob, fileInfo.fileName);
         };
 
+        const markdownStyle = {
+            marginTop: '1px',  // 顶部间距
+            marginBottom: '1px', // 底部间距
+            padding: 0, // 内边距
+        };
 
 
         // render component for the code file
@@ -505,6 +557,7 @@ class Message extends React.Component {
                         {// main window: the chat bubbles
                         this.state.chat.map((msg, index) => {
                             let bubble = null;
+
                             // right side chat bubble for user 
                             if (msg.from !== 'our') {
                                 bubble = (
@@ -512,8 +565,20 @@ class Message extends React.Component {
                                         <div id="botWindow" className="codeFormat">
                                             <div className="senderNameLeft">{msg.from}</div> {/* dynamic group agent */}
                                             <div>
-                                                {msg.code && <CodeDisplay code={msg.code} />}
-                                                {msg.msg}
+                                                {msg.parts && msg.parts.map((part, partIndex) => {
+                                                    if (part.type === 'code') {
+                                                        return <CodeDisplay key={partIndex} code={part.content} />;
+                                                    } else {
+                                                        // 使用 marked 将 Markdown 文本转换为 HTML
+                                                        const normalizedMarkdown = normalizeMarkdown(part.content);
+                                                        console.log('Marked Output:', normalizedMarkdown);
+                                                        const rawMarkup = marked(normalizedMarkdown);
+                                                        console.log('Marked Output:', rawMarkup);
+                                                        const rawMarkup2 = removeExtraParagraphs(rawMarkup);
+                                                        console.log('Cleaned HTML:', rawMarkup2);
+                                                        return <div key={partIndex} className="markdown-content" dangerouslySetInnerHTML={{ __html: rawMarkup2 }} />;
+                                                    }
+                                                })}
                                             </div>
                                         </div>
                                     </div>

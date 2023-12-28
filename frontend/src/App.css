@@ -30,7 +30,8 @@
   justify-content: left;
   align-items: center;
   text-align: left;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(40px);
+  background-color: #000000a2;
   padding: 10px 20px;
   z-index: 1000;
   border-bottom: 0.5px solid #AEC0FF;
@@ -58,11 +59,7 @@
   color: #61dafb;
 }
 
-#fullscreen {
-  display: flex;
-  flex-direction: row;
-  justify-content: 'space-between';
-}
+
 
 .information {
   padding: 10px;
@@ -93,8 +90,41 @@
   margin-top: 12px;
 }
 
+{/*-----window_width>1000px--------*/}
+#fullscreen {
+  display: flex;
+  margin: 0;
+  flex-direction: row;
+  justify-content: 'space-between';
+  background: #ffffff
+}
+
+#chatContainer {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  background: rgb(255, 255, 255);
+  /* width: 1636px; */
+  /* 宽度为 1636px */
+  max-width: calc(100% - 16px);
+  /* 确保最大宽度不超过屏幕宽度减去两边的间距 */
+  margin-right: 0px;
+  /* 右侧自动填充空白 */
+  margin-left: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-top: 80px;
+  /* 左侧自动填充空白 */
+  margin-bottom: 140px;
+  /* padding-bottom: 60px; */
+  height: calc(100vh - 220px);
+  /* 高度为视窗高度减去底部距离 */
+}
+
 #leftSideBar {
-  /*display: block;*/
+  display: flex;
+
   background: #2A2726;
   color: white;
   width: 300px;
@@ -106,17 +136,64 @@
   /* 顶部对齐 */
   bottom: 0;
   /* 底部对齐 */
-  display: flex;
+  
   flex-direction: column;
 
 }
 
-@media (max-width: 1000px) {
+.input-group {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: #FFEAEA;
+  /* Light grey with transparency */
+  border-radius: 12px;
+  position:fixed ;
+  bottom: 60px;
+  left: calc(50% + 150px);
+  transform: translateX(-50%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  /* Transition for smooth effect */
+  margin: 0 auto;
+  max-width: 1000px;
+  width: 800px;
+  /*height:10vh;*/
+}
+
+{/*-----600px<n<1000px--------*/}
+
+@media (max-width: 1200px) {
+  #fullscreen {
+    /* display: flex; */
+    margin: 0;
+    flex-direction: row;
+    justify-content: 'space-between';
+  }
+  
   #leftSideBar {
     display: none;
     /* 隐藏 Sidebar */
     width: 0;
     /* 移除宽度，防止占用空间 */
+  }
+
+  #chatContainer {
+    display: flex;
+
+    justify-content: center; /* 水平居中 */
+    align-items: flex-start;
+    width: 100%;
+    /* 屏幕宽度减去两边的间距 */
+    margin: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-top: 160px;
+    /* 底部距离固定为 68px */
+    margin-bottom: 140px;
+    /* padding-bottom: 60px; */
+    height: calc(100vh - 300px);
+    /* 高度为视窗高度减去底部距离 */
   }
 
   /* 显示一个图标来控制 Sidebar 显示 */
@@ -130,98 +207,89 @@
     z-index: 1000;
     /* 添加图标样式 */
   }
-}
 
-#chatContainer {
-  background: black;
-  width: 1636px;
-  /* 宽度为 1636px */
-  max-width: calc(100% - 16px);
-  /* 确保最大宽度不超过屏幕宽度减去两边的间距 */
-  margin-right: auto;
-  /* 右侧自动填充空白 */
-  margin-left: calc(300px);
-  /* 左侧自动填充空白 */
-  margin-bottom: 68px;
-  /* 底部距离固定为 68px */
-  height: calc(100vh - 68px);
-  /* 高度为视窗高度减去底部距离 */
-}
 
-@media (max-width: 1000px) {
-  #chatContainer {
-    width: calc(100% - 32px);
-    /* 屏幕宽度减去两边的间距 */
-    margin-left: 16px;
-    /* 左侧间距 */
-    margin-right: 16px;
-    /* 右侧间距 */
-    margin-bottom: 68px;
-    /* 底部距离固定为 68px */
-    height: calc(100vh - 68px);
-    /* 高度为视窗高度减去底部距离 */
+  .input-group {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background-color: #FFEAEA;
+    border-radius: 12px;
+    position: fixed; /* 固定定位 */
+    bottom: 60px; /* 距离底部20px */
+    left: 50%; /* 水平方向居中 */
+    transform: translateX(-50%); /* 左移自身宽度的50%，以确保居中 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    max-width: 1000px;
+    width: 800px;
+    /* 移除 margin: 0 auto; 因为我们已经使用了定位和变换来居中 */
   }
+  
 }
 
 #chatt {
   height: 80vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 70px;
+  align-items: center;
+
+  position: relative;
+  width: 800px;
+  margin: 0 auto;
+  margin-top: 0px;
+  margin-bottom: 80px;
 }
 
-::-webkit-scrollbar {
+#chatContainer::-webkit-scrollbar {
   width: 12px;
   /* 滚动条的宽度 */
 }
 
-::-webkit-scrollbar-track {
-  background: black;
+#chatContainer::-webkit-scrollbar-track {
+  background: rgb(255, 255, 255);
   /* 滚动条轨道的背景色 */
 }
 
-::-webkit-scrollbar-thumb {
+#chatContainer::-webkit-scrollbar-thumb {
   background-color: #888;
   /* 滚动条本身的颜色 */
   border-radius: 6px;
   /* 滚动条的圆角 */
-  border: 3px solid black;
-  /* 滚动条边框 */
 }
 
-::-webkit-scrollbar-thumb:hover {
+#chatContainer::-webkit-scrollbar-thumb:hover {
   background: #555;
   /* 鼠标悬停时滚动条的颜色 */
 }
 
 #botWindow {
-  flex-wrap: wrap;
-  font-size: 17px;
-  margin-bottom: 10px;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  font-size: 20px;
+  margin-bottom: 40px;
   border-radius: 5px;
-  margin-right: 600px;
-  padding: 10px;
-  background-color: #E1E1E2;
+  margin-right: 0px;
+  padding-top: 20px;
+  background-color: #ffffff;
   color: #284856;
   float: left;
-  display: block;
+  display: flex;
+  line-height: 1.2;
 }
 
 #userWindow {
   flex-wrap: wrap;
-  font-size: 17px;
-  margin-right: 20px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  margin-left: 600px;
-  padding: 10px;
-  background-color: #C4CBCD;
+  flex-direction: column;
+  font-size: 20px;
+  margin-right: 0px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  padding: 20px;
+  background-color: #FFEAEA;
+  
+
   float: right;
-  display: block;
-  color: black;
+  display: flex;
+  color: #284856;
 }
 
 
@@ -229,10 +297,12 @@
 
 
 .radio-buttons {
+  display: flex;
   background-color: #363a49;
   padding: 5px;
   border: 1px solid #363a49;
   border-radius: 10px;
+  align-items: center;
 }
 
 .radio-buttons input[type='radio'] {
@@ -245,14 +315,19 @@
   padding: 10px 45px;
   border-radius: 5px;
   display: inline-block;
-  cursor: pointer;
+  outline: none;
+  /* cursor: pointer; */
+  width:40px;
   color: #9CC4CF;
+  text-align: center;
+  font-weight: 500;
 }
 
 .radio-buttons input[type='radio']:checked+label {
   background-color: #2A2726;
   color: #9CC4CF;
   border-color: #C4CBCD;
+  font-weight: 500;
 }
 
 .inputs label {
@@ -261,13 +336,14 @@
   margin-top: 20px;
   margin-bottom: 5px;
   float: left;
-  color: #59DAFF;
+  color: #418192;
+  font-weight: 500;
 }
 
 .inputs input[type='text'] {
   background-color: #2A2726;
   display: block;
-  width: 90%;
+  width: 248.79px;
   padding: 10px;
   margin-top: 10px;
   border: 1px solid #454A5B;
@@ -311,18 +387,22 @@
 
 
 .messageContainer {
-  margin-bottom: 10px;
+  margin: 0;
+  line-height: 1.0;
+  padding-left: 0;
 }
 
 .senderName {
+  flex:1;
   font-size: 0.85em;
   color: #7E9CA9;
   /* Grey color for the sender's name */
   margin-bottom: 2px;
-  float: right;
+  text-align: right;
 }
 
 .senderNameLeft {
+  flex:1;
   font-size: 0.85em;
   color: #7E9CA9;
   /* Grey color for the sender's name */
@@ -333,7 +413,7 @@
 .codeFormat {
   text-align: left;
   /* Aligns text to the left */
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
   /* Preserves whitespace and formatting */
   /* CSS 2.0 */
 
@@ -366,9 +446,10 @@
   margin-top: auto;
   /* Pushes it to the bottom of the container */
   font-size: 0.8em;
-  color: #59DAFF;
+  color: #418192;
   padding: 10px;
   margin-bottom: 25px;
+  font-weight: 500;
 }
 
 .creator-image {
@@ -382,7 +463,8 @@
 
 /* For the container that holds the code file section */
 .code-file-section {
-  padding: 10px;
+  padding: 15px;
+  padding-top: 30px;
   border-top: 0.5px solid #454a5b;
 }
 
@@ -394,15 +476,17 @@
   border-top-right-radius: 10px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  border: 0.5px solid #418192;
+  border: 0.5px solid #454A5B;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  /*overflow-y: auto;*/
+  overflow-y: auto;
   max-height: 108px;
+  height: 108px;
   overflow-x: hidden;
 }
 
 .section-title {
-  color: #59DAFF;
+  color: #418192;
+  font-weight: 500;
 }
 
 /* Scrollbar Styling */
@@ -442,7 +526,7 @@
   /* Spacing between items */
   color: #fff;
   /* Text color */
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .file-item i {
@@ -466,9 +550,9 @@
   /* Dark background */
   color: #418192;
   /* Text color */
-  border: 0.5px solid #418192;
+  border: 0.5px solid #454A5B;
   padding: 10px 20px;
-  cursor: pointer;
+  /* cursor: pointer; */
   /* Rounded corners */
   display: block;
   font-size: 14px;
@@ -476,7 +560,7 @@
 }
 
 .download-all:hover {
-  background-color: #919fad;
+  background-color: #2e4156;
   /* Darker background on hover */
 }
 
@@ -499,19 +583,7 @@ button.downloadBtn {
   margin: 0;
 }
 
-.input-group {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: rgba(217, 217, 217, 0.9);
-  /* Light grey with transparency */
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-  /* Transition for smooth effect */
-  margin: 10px 100px;
-  /*height:10vh;*/
-}
+
 
 .input-group:hover {
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
@@ -519,23 +591,25 @@ button.downloadBtn {
 }
 
 #msgText {
+  font-size: 20px;
   flex: 1;
   padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   margin: 0 10px;
   outline: none;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #ffffff;
+  color:#284856
   /* Slightly transparent background */
 }
 
 #submitBtn {
-  padding: 10px 20px;
+  padding: 14px 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: rgb(91, 155, 213);
   color: white;
-  cursor: pointer;
+  /* cursor: pointer; */
   text-transform: uppercase;
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -563,27 +637,29 @@ button.downloadBtn {
   color: white;
   /* White text */
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
+  
   padding: 10px;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: background-color 0.3s, transform 0.2s;
 }
 
 
 
 .add-file-btn {
-  background-color: rgba(239, 239, 244, 0.9);
+  background-color: #ffffff;
   border: none;
-  padding: 1px 2px;
-  cursor: pointer;
-  color: #B6CCD3;
-  border-radius: 5px;
+  padding: 5px 5px;
+  /* cursor: pointer; */
+  color: #d8cdcd;
+  border-radius: 8px;
+  margin-left: 2px;
   transition: background-color 0.3s ease;
   /* Smooth transition for background color */
 }
 
 .add-file-btn:hover {
-  background-color: rgba(219, 219, 224, 0.9);
+  background-color: rgba(219, 219, 224, 0.8);
   /* Darker shade for hover */
 }
 
@@ -605,7 +681,7 @@ button.downloadBtn {
   /* Rounded corners */
   margin: 5px;
   /* Some space around buttons */
-  cursor: pointer;
+  /* cursor: pointer; */
   /* Pointer cursor on hover */
   transition: background-color 0.3s, transform 0.3s;
   /* Smooth transition for hover effect */
@@ -641,9 +717,62 @@ button.downloadBtn {
   display: inline-block; /* Inline-block display */
   font-size: 16px; /* Font size */
   margin-top: 30px; /* Margin around the button */
-  cursor: pointer; /* Cursor changes to pointer on hover */
   border: none; /* No border */
   border-radius: 8px; /* Rounded corners */
   transition-duration: 0.4s;
   margin-left: 25%;
 } 
+
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content ol, 
+.markdown-content ul, 
+.markdown-content li {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 0px !important;
+  padding-left:0;
+  line-height: 1.2;
+  margin-inline-start: px;
+  margin-inline-end: 0px;
+  text-align: -webkit-match-parent;
+}
+
+
+.markdown-content h3{
+  margin-top: 20px !important;
+  margin-bottom: 16px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  /* padding-left:-1; */
+  line-height: 1.2;
+  margin-inline-start: px;
+  margin-inline-end: 0px;
+  text-align: -webkit-match-parent;
+}
+
+.markdown-content h4{
+  margin-top: 12px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  /* padding-left:-1; */
+  line-height: 1.2;
+  margin-inline-start: px;
+  margin-inline-end: 0px;
+  text-align: -webkit-match-parent;
+}
+
+.markdown-content p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 0px !important;
+  padding-left:0;
+  line-height: 1.4;
+  margin-inline-start: px;
+  margin-inline-end: 0px;
+  text-align: -webkit-match-parent;
+}
