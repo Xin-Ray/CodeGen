@@ -1,7 +1,7 @@
 # AutoGen Enhanced Project with 9 Agents
 
 ## Project Introduction
-This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently collaborating agents to support complex code requirement processing, code self-execution, and iteration. The project stands out for its unique combination of features, particularly in advanced code processing and iteration. The frontend is built with the Flask framework, and the backend uses React, ensuring user-friendly interfaces and efficient backend processing.
+This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently collaborating agents to support complex code requirement processing, code self-execution, and iteration. The project stands out for its unique combination of features, particularly in advanced code processing and iteration. The frontend is built with the Flask framework, and the backend uses React, ensuring user-friendly interfaces and efficient backend processing.In the future, we will focus on program level multi program file generation and interpertation.
 
 ## Key Features
 - **Document Reading and Understanding:** Utilizes RAG (Retrieval-Augmented Generation) functionality to effectively process and understand a large volume of documents.
@@ -10,6 +10,14 @@ This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently coll
 - **Code Self-Execution and Iteration:** Implements automatic code execution and feedback-based iterative improvement.
 
 - **Support for Large Language Model (LLM) URLs** Large language models can utilize the GPT-4 API (recommended) or the free LLM URLs (described later).
+
+- **Code Download and Retrieval** (In Progress)
+
+- **Batch Code File Interpretation** (In Progress)
+
+- **Cross-File Code Debugging and Search** (In Progress)
+
+- **Image Generation Interface** (In Progress)
 
 ![UI](UI.png)
 
