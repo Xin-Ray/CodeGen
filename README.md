@@ -16,16 +16,20 @@
 ## 如何开始
 请按照以下步骤设置和运行项目：
 
-1. **克隆仓库：**
-   ```bash
-   git clone <仓库URL>
+**克隆仓库：**
+   ```
+   bash
+   git clone https://github.com/Xin-Ray/CodeGen.git
+   ```
 ## 安装依赖：
-**前端：**
-    ```bash
+- **前端：**
+    ```
+    bash
     cd path/to/frontend
     npm install
     ```
-**后端：** 
+    
+- **后端：** 
     ```
     bash
     Copy code
@@ -34,14 +38,14 @@
     ```
 
 ## 启动服务器：
-**前端：**
+- **前端：**
 ```
 bash
 Copy code
 npm start
 ```
 
-**后端：**
+- **后端：**
 ```
 bash
 Copy code
