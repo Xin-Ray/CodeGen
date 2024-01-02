@@ -17,37 +17,32 @@
 请按照以下步骤设置和运行项目：
 
 **克隆仓库：**
-   ```
-   bash
-   git clone https://github.com/Xin-Ray/CodeGen.git
-   ```
+```bash
+git clone https://github.com/Xin-Ray/CodeGen.git
+```
 ## 安装依赖：
 - **前端：**
-    ```
-    bash
-    cd path/to/frontend
-    npm install
-    ```
+```bash
+cd path/to/frontend
+npm install
+```
     
 - **后端：** 
-    ```
-    bash
-    Copy code
-    cd path/to/backend
-    pip install -r requirements.txt
-    ```
+```bash
+Copy code
+cd path/to/backend
+pip install -r requirements.txt
+```
 
 ## 启动服务器：
 - **前端：**
-```
-bash
+```bash
 Copy code
 npm start
 ```
 
 - **后端：**
-```
-bash
+```bash
 Copy code
 python app.py
 ```
