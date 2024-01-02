@@ -1,64 +1,81 @@
 # AutoGen Enhanced Project with 9 Agents
 
-## 项目介绍
-本项目在AutoGen基础上实现了9个高效协作的代理（agent），以支持复杂的代码需求处理、代码自我执行与迭代等功能。该项目特色在于其独特的功能组合，特别是对于代码处理和迭代的高级支持。前端采用Flask框架，后端使用React，保证了用户界面的友好性和后端处理的高效性。
+## Project Introduction
+This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently collaborating agents to support complex code requirement processing, code self-execution, and iteration. The project stands out for its unique combination of features, particularly in advanced code processing and iteration. The frontend is built with the Flask framework, and the backend uses React, ensuring user-friendly interfaces and efficient backend processing.
 
-## 主要特点
-- **文档阅读与理解：** 利用RAG（Retrieval-Augmented Generation）功能，可以有效地处理和理解大量文档。
-- **图像处理能力：** 具备读取和解释图像的能力，支持多种图像分析场景。
-- **代码团队协作：** 通过9个代理的协作，有效处理复杂的代码需求。
-- **代码自我执行与迭代：** 实现代码的自动执行和基于反馈的迭代改进。
+## Key Features
+- **Document Reading and Understanding:** Utilizes RAG (Retrieval-Augmented Generation) functionality to effectively process and understand a large volume of documents.
+- **Image Processing Capability:** Capable of reading and interpreting images, supporting various image analysis scenarios.
+- **Code Team Collaboration:** Effective handling of complex code requirements through the collaboration of 9 agents.
+- **Code Self-Execution and Iteration:** Implements automatic code execution and feedback-based iterative improvement.
 
-## 技术栈
-- **前端：** Flask
-- **后端：** React
+- **Support for Large Language Model (LLM) URLs** Large language models can utilize the GPT-4 API (recommended) or the free LLM URLs (described later).
 
-## 如何开始
-请按照以下步骤设置和运行项目：
 
-**克隆仓库：**
+## Technology Stack
+- **Frontend:** Flask
+- **Backend:** React
+
+## Getting Started
+Follow these steps to set up and run the project:
+
+**Clone the repository:**
 ```bash
 git clone https://github.com/Xin-Ray/CodeGen.git
 ```
-## 安装依赖：
-- **前端：**
+## Installing Dependencies:
+- **Frontend:
+Backend:
 ```bash
-cd path/to/frontend
-npm install
+cd path/to/backend/autogen_modifi
+pip install .
 ```
-    
-- **后端：** 
+## Starting the Server:
+- **Frontend:**
 ```bash
-Copy code
-cd path/to/backend
-pip install -r requirements.txt
-```
-
-## 启动服务器：
-- **前端：**
-```bash
-Copy code
 npm start
 ```
-
-- **后端：**
+- **Backend:**
 ```bash
 Copy code
-python app.py
+python flask_websockeGPT.py
 ```
 
-## 贡献指南
+## How to Use LLM's URL
 
-我们欢迎所有形式的贡献，无论是新功能的建议、代码提交还是问题报告。请遵循以下步骤：
+**Method 1:** You can download a large language model (LLM) locally using tools like LM Studio, start a server, and then copy the server link. Paste this link into our page and you can leave the `model_name` field blank.
 
-1. Fork项目仓库。
-2. 创建新的特性分支（`git checkout -b my-new-feature`）。
-3. 提交你的更改（`git commit -am 'Add some feature'`）。
-4. 推送到分支（`git push origin my-new-feature`）。
-5. 创建新的Pull Request。
+**Method 2:** Run `Mistral7B.ipynb` in Colab to obtain the link. Copy and paste this link into our page, and you can also leave the `model_name` field blank.
 
-## 许可证
-本项目遵循 MIT 许可证。
+**Note:** The functionality of Mistral7B is not stable, as it has a smaller number of parameters and weaker inference capabilities, making effective team collaboration difficult. 
 
-联系方式
-如有任何问题或建议，请联系 [联系人邮箱或其他联系方式]。
+**Motivation：**The initial purpose of creating the LLM URL feature was driven by the high cost of GPT-4. We hope that in the future, there will be open-source and free large language models with fewer parameters that can run on local computers and have inference capabilities surpassing humans. Such models could be directly integrated into our framework to achieve better scalability.
+
+
+## Contribution Guide
+We welcome all forms of contributions, whether suggestions for new features, code submissions, or issue reports. Please follow these steps:
+
+1. Fork the project repository.
+2. Create a new feature branch (git checkout -b my-new-feature).
+3. Commit your changes (git commit -am 'Add some feature').
+4. Push to the branch (git push origin my-new-feature).
+5. Create a new Pull Request.
+
+## License
+This project follows the MIT License.
+
+## References
+AutoGen official website: https://microsoft.github.io/autogen/docs/Contribute
+AutoGen GitHub: https://github.com/microsoft/autogen
+
+## Contact
+Currently seeking job opportunities
+For any questions or suggestions, please contact [xxiang@mail.yu.edu].
+
+## Development Team
+Yeshiva University Codegen Team lead by xinxiang
+group member:Deepa, Manish, Pinxue Lin, Xin Xiang
+
+
+
+
