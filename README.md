@@ -1,3 +1,5 @@
+[English](README.md) / [简体中文](README_CH.md)
+
 # AutoGen Enhanced Project with 9 Agents
 
 ## Project Introduction
