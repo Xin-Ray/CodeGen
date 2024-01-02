@@ -11,6 +11,7 @@ This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently coll
 
 - **Support for Large Language Model (LLM) URLs** Large language models can utilize the GPT-4 API (recommended) or the free LLM URLs (described later).
 
+![UI](UI.png)
 
 ## Technology Stack
 - **Frontend:** Flask
