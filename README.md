@@ -6,11 +6,16 @@
 This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently collaborating agents to support complex code requirement processing, code self-execution, and iteration. The project stands out for its unique combination of features, particularly in advanced code processing and iteration. The frontend is built with the Flask framework, and the backend uses React, ensuring user-friendly interfaces and efficient backend processing.In the future, we will focus on program level multi program file generation and interpertation.
 
 ## Key Features
-- **Document Reading and Understanding:** Utilizes RAG (Retrieval-Augmented Generation) functionality to effectively process and understand a large volume of documents.
-- **Image Processing Capability:** Capable of reading and interpreting images, supporting various image analysis scenarios.
 - **Code Team Collaboration:** Effective handling of complex code requirements through the collaboration of 9 agents.
+- **EDA:** Explore Data Analyse 
+![EDA](images/EDA.png)
 - **Code Self-Execution and Iteration:** Implements automatic code execution and feedback-based iterative improvement.
-
+![fix bug](images/code_bug_auto_fix.png)
+- **Document Reading and Understanding:** Utilizes RAG (Retrieval-Augmented Generation) functionality to effectively process and understand a large volume of documents.
+![rag](images/rag.png)
+- **website scraping**
+![website_scraping](images/scrape_website.png)
+- **Image Processing Capability:** Capable of reading and interpreting images, supporting various image analysis scenarios.
 - **Support for Large Language Model (LLM) URLs** Large language models can utilize the GPT-4 API (recommended) or the free LLM URLs (described later).
 
 - **Code Download and Retrieval** (In Progress)
@@ -21,7 +26,7 @@ This project, Codegen, built on Microsoft AutoGen, implements 9 efficiently coll
 
 - **Image Generation Interface** (In Progress)
 
-![UI](UI.png)
+### For more details check the demo videos in our file. 
 
 ## Technology Stack
 - **Frontend:** Flask
