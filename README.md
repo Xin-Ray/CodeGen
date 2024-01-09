@@ -91,6 +91,9 @@ For any questions or suggestions, please contact [xxiang@mail.yu.edu].
 
 ## Development Team
 Yeshiva University Codegen Team lead by xinxiang
+
+Instructor：Professor Honggang Wang
+
 group member:Deepa, Manish, Pinxue Lin, Xin Xiang
 
 
