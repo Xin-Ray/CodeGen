@@ -4,15 +4,24 @@
 
 ## 项目介绍
 本项目Codegen在Microsoft AutoGen基础上实现了9个高效协作的代理（agent），以支持复杂的代码需求处理、代码自我执行与迭代等功能。该项目特色在于其独特的功能组合，特别是对于代码处理和迭代的高级支持。前端采用Flask框架，后端使用React，保证了用户界面的友好性和后端处理的高效性。未来专注于实现项目级别的app代码生成和解读。
+![codegen](images/codegen.png)
 
 ## 主要特点
+- **代码团队协作：** 通过9个代理的协作，有效处理复杂的代码需求。
+
+- **EDA:** Explore Data Analyse 
+![EDA](images/EDA.png)
+
+- **代码自我执行与迭代：** 实现代码的自动执行和基于反馈的迭代改进。
+![fix bug](images/code_bug_auto_fix.png)
 - **文档阅读与理解：** 利用RAG（Retrieval-Augmented Generation）功能，可以有效地处理和理解大量文档。
+![rag](images/rag.png)
+
+- **网络爬取**
+![website_scraping](images/scrape_website.png)
 
 - **图像处理能力：** 具备读取和解释图像的能力，支持多种图像分析场景。
 
-- **代码团队协作：** 通过9个代理的协作，有效处理复杂的代码需求。
-
-- **代码自我执行与迭代：** 实现代码的自动执行和基于反馈的迭代改进。
 
 - **支持大语言模型LLM的URL** 大语言模型可以使用GPT4API（推荐）也可以使用免费的LLM URL（后文介绍）
 
